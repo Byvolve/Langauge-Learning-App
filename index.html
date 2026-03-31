@@ -293,6 +293,29 @@
     .btn-secondary:hover { background: #eef2ff; }
     .btn-secondary:focus { outline: 2px solid #4f74e3; outline-offset: 2px; }
 
+    /* ════ WORD INTRO ════ */
+    .word-intro-header { margin-bottom: 24px; }
+    .word-intro-eyebrow {
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: #7c8db0; margin-bottom: 6px;
+    }
+    .word-intro-story-title { font-size: 24px; font-weight: 800; color: #1a1f36; margin-bottom: 8px; }
+    .word-intro-instruction  { font-size: 15px; color: #7c8db0; line-height: 1.6; }
+
+    .word-cards { display: flex; flex-direction: column; gap: 14px; margin-bottom: 28px; }
+
+    .word-card {
+      background: #f7f9ff; border: 1.5px solid #dce3f5;
+      border-radius: 14px; padding: 18px 20px;
+    }
+    .word-card-nl  { font-size: 22px; font-weight: 800; color: #1a1f36; margin-bottom: 4px; }
+    .word-card-en  { font-size: 15px; font-weight: 600; color: #4f74e3; margin-bottom: 8px; }
+    .word-card-example {
+      font-size: 13px; color: #7c8db0; font-style: italic; line-height: 1.5;
+      border-top: 1px solid #e8ecf5; padding-top: 8px;
+    }
+
     @media (max-width: 500px) {
       body { padding: 16px 12px; }
       .card { padding: 24px 20px; }
@@ -363,6 +386,18 @@
       <h1 id="ui-choose-story"></h1>
     </div>
     <div class="story-cards" id="story-cards-wrap"></div>
+  </div>
+
+  <!-- ════ SCREEN 3b: WORD INTRO ════ -->
+  <div id="screen-word-intro" class="screen">
+    <button class="back-link" id="ui-word-intro-back" onclick="showScreen('screen-select')"></button>
+    <div class="word-intro-header">
+      <p class="word-intro-eyebrow" id="ui-word-intro-eyebrow"></p>
+      <h1 class="word-intro-story-title" id="word-intro-story-title"></h1>
+      <p class="word-intro-instruction" id="ui-word-intro-instruction"></p>
+    </div>
+    <div class="word-cards" id="word-cards-wrap"></div>
+    <button class="btn-primary" id="ui-word-intro-btn" onclick="showScreen('screen-story')"></button>
   </div>
 
   <!-- ════ SCREEN 4: STORY READING ════ -->
@@ -442,8 +477,11 @@
       correctAnswer:  "Correct:",
       questionsTag:   "questions",
       doneTag:        "Done",
-      exampleLabel:   "Example:",
-      indicatorLabel: "Learning",
+      exampleLabel:      "Example:",
+      indicatorLabel:    "Learning",
+      wordIntroEyebrow:  "Before you read",
+      wordIntroInstruction: "Learn these words. Then read the story.",
+      startReading:      "Start reading →",
     },
     nl: {
       learnTitle:     "Wat wil je oefenen?",
@@ -472,8 +510,11 @@
       correctAnswer:  "Juist:",
       questionsTag:   "vragen",
       doneTag:        "Klaar",
-      exampleLabel:   "Voorbeeld:",
-      indicatorLabel: "Je leert",
+      exampleLabel:      "Voorbeeld:",
+      indicatorLabel:    "Je leert",
+      wordIntroEyebrow:  "Voordat je leest",
+      wordIntroInstruction: "Leer deze woorden. Dan lees je het verhaal.",
+      startReading:      "Begin met lezen →",
     }
   };
 
@@ -483,6 +524,8 @@
   const stories = [
     {
       emoji: "🧺",
+      level: "a1",
+      theme: "family",
       difficulty: 1,
       en: {
         title:  "Family Picnic",
@@ -537,6 +580,8 @@
     },
     {
       emoji: "🐶",
+      level: "a1",
+      theme: "daily-life",
       difficulty: 1,
       en: {
         title:  "My Dog Max",
@@ -586,6 +631,64 @@
           { question: "Wat doet Max na het eten?",      options: ["Hij speelt met een bal","Hij drinkt water uit zijn bak","Hij rent in de tuin","Hij slaapt op de bank"], correct: 1, explanation: { nl: "In het verhaal staat: \"drinkt hij water uit zijn bak.\"", en: "The story says: \"drinkt hij water uit zijn bak.\""  } },
           { question: "Waar lopen ze langs?",           options: ["Het park en de rivier","Het strand en de winkels","De winkels en de school","De school en het park"], correct: 2, explanation: { nl: "In het verhaal staat: \"langs de winkels en de school.\"", en: "The story says: \"langs de winkels en de school.\""  } },
           { question: "Welke kleur heeft Max zijn mand?",options: ["Blauw","Groen","Geel","Rood"],                                                                      correct: 3, explanation: { nl: "In het verhaal staat: \"zijn grote rode mand.\"",        en: "The story says: \"zijn grote rode mand.\""          } }
+        ]
+      }
+    },
+    {
+      emoji: "🛒",
+      level: "a0",
+      theme: "supermarket",
+      difficulty: 1,
+      en: {
+        title:  "At the Supermarket",
+        teaser: "Ali goes shopping for the first time in the Netherlands.",
+        keywords: [
+          { word: "shopping",  translation: { nl: "boodschappen" }, meaning: { en: "buying food and other things in a shop" }, example: "I do my shopping on Saturday." },
+          { word: "checkout",  translation: { nl: "kassa" },        meaning: { en: "the place in a shop where you pay" },      example: "I wait at the checkout." },
+          { word: "discount",  translation: { nl: "korting" },      meaning: { en: "a lower price than normal" },             example: "There is a discount on milk." },
+          { word: "bag",       translation: { nl: "tas" },          meaning: { en: "a container you carry things in" },       example: "I put my shopping in a bag." },
+          { word: "wait",      translation: { nl: "wachten" },      meaning: { en: "to stay until something happens" },       example: "I wait at the checkout." }
+        ],
+        paragraphs: [
+          "My name is Ali. I live in Amsterdam.",
+          "Today I go shopping. I go to the supermarket.",
+          "In the supermarket I buy bread and milk. There is a discount on milk.",
+          "I take a bag. I put my shopping in the bag.",
+          "At the checkout I have to wait. There are many people.",
+          "I pay and go home. Shopping is not difficult."
+        ],
+        questions: [
+          { question: "Where does Ali live?",              options: ["Rotterdam","Utrecht","Amsterdam","Den Haag"],                                                      correct: 2, explanation: { en: "The story says: \"I live in Amsterdam.\"",                        nl: "In het verhaal staat: \"I live in Amsterdam.\""                      } },
+          { question: "What does Ali buy?",                options: ["Cheese and apples","Bread and milk","Coffee and tea","Meat and vegetables"],                       correct: 1, explanation: { en: "The story says: \"I buy bread and milk.\"",                      nl: "In het verhaal staat: \"I buy bread and milk.\""                    } },
+          { question: "What has a discount?",              options: ["Bread","Milk","Coffee","Cheese"],                                                                   correct: 1, explanation: { en: "The story says: \"There is a discount on milk.\"",               nl: "In het verhaal staat: \"There is a discount on milk.\""               } },
+          { question: "What does Ali do at the checkout?", options: ["He calls","He eats","He waits","He runs"],                                                         correct: 2, explanation: { en: "The story says: \"At the checkout I have to wait.\"",             nl: "In het verhaal staat: \"At the checkout I have to wait.\""             } },
+          { question: "Is shopping difficult for Ali?",    options: ["Yes, very difficult","No, not difficult","Yes, sometimes","Maybe"],                                 correct: 1, explanation: { en: "The story says: \"Shopping is not difficult.\"",                nl: "In het verhaal staat: \"Shopping is not difficult.\""                } }
+        ]
+      },
+      nl: {
+        title:  "Bij de Supermarkt",
+        teaser: "Ali doet voor het eerst boodschappen in Nederland.",
+        keywords: [
+          { word: "boodschappen", translation: { en: "groceries / shopping" }, meaning: { nl: "eten en andere dingen kopen in een winkel" }, example: "Ik doe boodschappen op zaterdag." },
+          { word: "kassa",        translation: { en: "checkout / till" },      meaning: { nl: "de plek in een winkel waar je betaalt" },      example: "Ik wacht bij de kassa." },
+          { word: "korting",      translation: { en: "discount" },             meaning: { nl: "een lagere prijs dan normaal" },              example: "Er is korting op melk." },
+          { word: "tas",          translation: { en: "bag" },                  meaning: { nl: "een zak om dingen in te dragen" },            example: "Ik doe mijn boodschappen in de tas." },
+          { word: "wachten",      translation: { en: "to wait" },              meaning: { nl: "blijven totdat iets gebeurt" },               example: "Ik moet wachten bij de kassa." }
+        ],
+        paragraphs: [
+          "Mijn naam is Ali. Ik woon in Amsterdam.",
+          "Vandaag doe ik boodschappen. Ik ga naar de supermarkt.",
+          "In de supermarkt koop ik brood en melk. Er is korting op melk.",
+          "Ik pak een tas. Ik doe mijn boodschappen in de tas.",
+          "Bij de kassa moet ik wachten. Er zijn veel mensen.",
+          "Ik betaal en ga naar huis. Boodschappen doen is niet moeilijk."
+        ],
+        questions: [
+          { question: "Waar woont Ali?",                  options: ["Rotterdam","Utrecht","Amsterdam","Den Haag"],                                                        correct: 2, explanation: { en: "The story says: \"Ik woon in Amsterdam.\"",                   nl: "In het verhaal staat: \"Ik woon in Amsterdam.\""                   } },
+          { question: "Wat koopt Ali?",                   options: ["Kaas en appels","Brood en melk","Koffie en thee","Vlees en groente"],                               correct: 1, explanation: { en: "The story says: \"Ik koop brood en melk.\"",                 nl: "In het verhaal staat: \"Ik koop brood en melk.\""                 } },
+          { question: "Waarop is korting?",               options: ["Op brood","Op melk","Op koffie","Op kaas"],                                                          correct: 1, explanation: { en: "The story says: \"Er is korting op melk.\"",                 nl: "In het verhaal staat: \"Er is korting op melk.\""                 } },
+          { question: "Wat doet Ali bij de kassa?",       options: ["Hij belt","Hij eet","Hij wacht","Hij loopt"],                                                        correct: 2, explanation: { en: "The story says: \"Bij de kassa moet ik wachten.\"",            nl: "In het verhaal staat: \"Bij de kassa moet ik wachten.\""            } },
+          { question: "Is boodschappen doen moeilijk?",   options: ["Ja, heel moeilijk","Nee, niet moeilijk","Ja, soms","Misschien"],                                     correct: 1, explanation: { en: "The story says: \"Boodschappen doen is niet moeilijk.\"",    nl: "In het verhaal staat: \"Boodschappen doen is niet moeilijk.\""    } }
         ]
       }
     }
@@ -720,7 +823,35 @@
     currentStory = stories[idx];
     currentStory._idx = idx;
     updateStoryScreen();
-    showScreen("screen-story");
+    buildWordIntroScreen();
+    showScreen("screen-word-intro");
+  }
+
+  function buildWordIntroScreen() {
+    const t   = tr();
+    const c   = sc(currentStory);
+    const kws = c.keywords || [];
+
+    document.getElementById("ui-word-intro-back").textContent      = t.allStories;
+    document.getElementById("ui-word-intro-eyebrow").textContent   = t.wordIntroEyebrow;
+    document.getElementById("word-intro-story-title").textContent  = c.title;
+    document.getElementById("ui-word-intro-instruction").textContent = t.wordIntroInstruction;
+    document.getElementById("ui-word-intro-btn").textContent       = t.startReading;
+
+    const wrap = document.getElementById("word-cards-wrap");
+    wrap.innerHTML = "";
+    kws.forEach(kw => {
+      const meaning = (interfaceLang !== learningLang)
+        ? (kw.translation[interfaceLang] || "")
+        : (kw.meaning[interfaceLang]     || "");
+      const div = document.createElement("div");
+      div.className = "word-card";
+      div.innerHTML =
+        `<div class="word-card-nl">${escHTML(kw.word)}</div>` +
+        `<div class="word-card-en">${escHTML(meaning)}</div>` +
+        (kw.example ? `<div class="word-card-example">${escHTML(kw.example)}</div>` : "");
+      wrap.appendChild(div);
+    });
   }
 
   // ══════════════════════════════════════════
