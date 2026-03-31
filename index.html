@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Story Reader</title>
+  <title>Language Learning App</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -27,137 +27,93 @@
       position: relative;
     }
 
-    /* ── SCREENS ── */
     .screen { display: none; }
     .screen.active { display: block; }
 
-    /* ── TAAL TOGGLE ── */
-    .lang-toggle {
+    /* ── LANG INDICATOR (top right) ── */
+    .lang-indicator {
       position: absolute;
-      top: 16px;
-      right: 16px;
+      top: 16px; right: 16px;
+      display: flex; align-items: center; gap: 6px;
       background: #eef2ff;
       color: #4f74e3;
-      border: 2px solid #4f74e3;
+      border: 1.5px solid #c5d0f5;
       border-radius: 99px;
-      padding: 5px 14px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      letter-spacing: 0.5px;
+      padding: 5px 12px;
+      font-size: 12px; font-weight: 700;
+      cursor: pointer; z-index: 10;
       transition: background 0.15s;
-      z-index: 10;
     }
-    .lang-toggle:hover { background: #dce3f5; }
-    .lang-toggle.hidden { display: none; }
+    .lang-indicator:hover { background: #dce3f5; }
+    .lang-indicator:focus { outline: 2px solid #4f74e3; outline-offset: 2px; }
+    .lang-indicator.hidden { display: none; }
 
     /* ── BACK LINK ── */
     .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      font-weight: 700;
-      color: #7c8db0;
-      cursor: pointer;
-      margin-bottom: 24px;
-      border: none;
-      background: none;
-      padding: 0;
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 700; color: #7c8db0;
+      cursor: pointer; margin-bottom: 24px;
+      border: none; background: none; padding: 0;
     }
     .back-link:hover { color: #4f74e3; }
+    .back-link:focus { outline: 2px solid #4f74e3; border-radius: 4px; }
 
-    /* ════════════════════════════════
-       SCREEN -1 — TAALKEUZE
-    ════════════════════════════════ */
-    .lang-select-header {
-      text-align: center;
-      margin-bottom: 36px;
-      padding-top: 12px;
+    /* ════ LANGUAGE SELECTION SCREENS ════ */
+    .lang-screen-header {
+      text-align: center; margin-bottom: 36px; padding-top: 8px;
     }
-    .lang-select-header h1 {
-      font-size: 24px;
-      font-weight: 800;
-      color: #1a1f36;
-      margin-bottom: 6px;
+    .lang-screen-header h1 {
+      font-size: 24px; font-weight: 800; color: #1a1f36; margin-bottom: 10px;
     }
-    .lang-select-header p {
-      font-size: 15px;
-      color: #7c8db0;
-    }
+    .lang-screen-header p { font-size: 15px; color: #7c8db0; line-height: 1.6; }
 
-    .lang-options {
-      display: flex;
-      gap: 16px;
-    }
+    .lang-options { display: flex; gap: 16px; }
 
     .lang-option-btn {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      border: 2px solid #dce3f5;
-      border-radius: 16px;
-      padding: 28px 20px;
-      background: #f7f9ff;
-      cursor: pointer;
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; gap: 10px;
+      border: 2px solid #dce3f5; border-radius: 16px;
+      padding: 28px 16px; background: #f7f9ff; cursor: pointer;
       transition: border-color 0.15s, background 0.15s, transform 0.1s;
+      font-family: inherit;
     }
-    .lang-option-btn:hover {
-      border-color: #4f74e3;
-      background: #eef2ff;
-      transform: translateY(-2px);
-    }
-    .lang-flag  { font-size: 48px; line-height: 1; }
-    .lang-name  { font-size: 18px; font-weight: 800; color: #1a1f36; }
+    .lang-option-btn:hover { border-color: #4f74e3; background: #eef2ff; transform: translateY(-2px); }
+    .lang-option-btn:focus { outline: 2px solid #4f74e3; outline-offset: 2px; }
+    .lang-flag { font-size: 44px; line-height: 1; }
+    .lang-name { font-size: 17px; font-weight: 800; color: #1a1f36; }
+    .lang-native { font-size: 13px; color: #7c8db0; }
 
-    /* ════════════════════════════════
-       SCREEN 0 — VERHAALKEUZE
-    ════════════════════════════════ */
+    /* ════ STORY SELECTION ════ */
     .select-header { margin-bottom: 28px; }
-    .select-header p {
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: #7c8db0;
-      margin-bottom: 6px;
+    .select-header .label-sm {
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: #7c8db0; margin-bottom: 6px;
     }
     .select-header h1 { font-size: 26px; font-weight: 800; color: #1a1f36; }
 
     .story-cards { display: flex; flex-direction: column; gap: 16px; }
 
     .story-card {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      border: 2px solid #dce3f5;
-      border-radius: 16px;
-      padding: 18px 20px;
-      cursor: pointer;
+      display: flex; align-items: center; gap: 18px;
+      border: 2px solid #dce3f5; border-radius: 16px;
+      padding: 18px 20px; cursor: pointer;
       transition: border-color 0.15s, background 0.15s, transform 0.1s;
-      background: #f7f9ff;
+      background: #f7f9ff; width: 100%; text-align: left;
+      font-family: inherit;
     }
-    .story-card:hover {
-      border-color: #4f74e3;
-      background: #eef2ff;
-      transform: translateY(-2px);
-    }
+    .story-card:hover { border-color: #4f74e3; background: #eef2ff; transform: translateY(-2px); }
+    .story-card:focus { outline: 2px solid #4f74e3; outline-offset: 2px; }
     .story-card-emoji { font-size: 38px; line-height: 1; flex-shrink: 0; }
     .story-card-info { flex: 1; }
     .story-card-info h2 { font-size: 17px; font-weight: 800; color: #1a1f36; margin-bottom: 4px; }
     .story-card-info p  { font-size: 13px; color: #7c8db0; line-height: 1.5; }
     .story-card-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
     .tag {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      background: #e8ecf5;
-      color: #4f74e3;
-      border-radius: 99px;
-      padding: 4px 10px;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.8px; text-transform: uppercase;
+      background: #e8ecf5; color: #4f74e3;
+      border-radius: 99px; padding: 4px 10px;
     }
     .tag.done { background: #eafaf1; color: #27ae60; }
     .difficulty { display: flex; gap: 3px; }
@@ -165,68 +121,99 @@
     .dot.filled { background: #4f74e3; }
     .arrow-icon { font-size: 20px; color: #b0bcd4; flex-shrink: 0; }
 
-    /* ════════════════════════════════
-       SCREEN 1 — VERHAAL LEZEN
-    ════════════════════════════════ */
+    /* ════ STORY READING ════ */
     .story-label {
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: #7c8db0;
-      margin-bottom: 6px;
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: #7c8db0; margin-bottom: 6px;
     }
     .story-title { font-size: 26px; font-weight: 800; color: #1a1f36; margin-bottom: 20px; }
+
+    .keywords-bar {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      margin-bottom: 20px; padding: 14px 16px;
+      background: #fffbf0; border: 1.5px solid #fde8a0;
+      border-radius: 10px; align-items: center;
+    }
+    .keywords-bar.hidden { display: none; }
+    .keywords-bar-label {
+      font-size: 12px; font-weight: 700; color: #b48a00;
+      margin-right: 4px; white-space: nowrap;
+    }
+    .keyword-chip {
+      font-size: 13px; background: #fff3c4; color: #8a6300;
+      border-radius: 99px; padding: 3px 10px; cursor: pointer;
+      border: 1.5px solid #f5d060; font-weight: 600;
+      transition: background 0.1s; font-family: inherit;
+    }
+    .keyword-chip:hover { background: #f5d060; }
+    .keyword-chip:focus { outline: 2px solid #b48a00; }
+
     .story-text {
-      font-size: 17px;
-      line-height: 1.9;
-      color: #333;
-      background: #f7f9ff;
-      border-left: 4px solid #4f74e3;
-      border-radius: 10px;
-      padding: 22px 24px;
-      margin-bottom: 28px;
+      font-size: 17px; line-height: 1.9; color: #333;
+      background: #f7f9ff; border-left: 4px solid #4f74e3;
+      border-radius: 10px; padding: 22px 24px; margin-bottom: 28px;
     }
     .story-text p { margin-bottom: 14px; }
     .story-text p:last-child { margin-bottom: 0; }
 
-    /* ════════════════════════════════
-       SCREEN 2 — VRAGEN
-    ════════════════════════════════ */
+    .keyword-btn {
+      background: none; border: none;
+      border-bottom: 2px solid #f5d060;
+      cursor: pointer; padding: 0 1px;
+      font-size: inherit; font-family: inherit; line-height: inherit;
+      font-weight: 600; color: #7a5500;
+      transition: background 0.1s;
+    }
+    .keyword-btn:hover { background: #fff3c4; border-radius: 3px; }
+    .keyword-btn:focus { outline: 2px solid #b48a00; border-radius: 3px; outline-offset: 1px; }
+
+    /* ── WORD POPUP ── */
+    .word-popup {
+      position: absolute;
+      background: white; border: 2px solid #4f74e3;
+      border-radius: 14px; padding: 16px 18px;
+      max-width: 280px; z-index: 100;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+    .word-popup.hidden { display: none; }
+    .popup-header {
+      display: flex; justify-content: space-between;
+      align-items: flex-start; margin-bottom: 8px;
+    }
+    .popup-word { font-size: 20px; font-weight: 800; color: #1a1f36; }
+    .popup-close {
+      background: none; border: none; font-size: 20px;
+      color: #b0bcd4; cursor: pointer; padding: 0; line-height: 1;
+    }
+    .popup-close:hover { color: #1a1f36; }
+    .popup-translation { font-size: 16px; font-weight: 700; color: #4f74e3; margin-bottom: 8px; }
+    .popup-example-label {
+      font-size: 11px; font-weight: 700; color: #b0bcd4;
+      text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 3px;
+    }
+    .popup-example { font-size: 13px; color: #7c8db0; font-style: italic; line-height: 1.5; }
+
+    /* ════ QUESTIONS ════ */
     .progress-bar-wrap {
-      background: #e8ecf5;
-      border-radius: 99px;
-      height: 8px;
-      margin-bottom: 10px;
-      overflow: hidden;
+      background: #e8ecf5; border-radius: 99px;
+      height: 8px; margin-bottom: 10px; overflow: hidden;
     }
     .progress-bar-fill {
-      background: #4f74e3;
-      height: 100%;
-      border-radius: 99px;
-      transition: width 0.4s ease;
+      background: #4f74e3; height: 100%;
+      border-radius: 99px; transition: width 0.4s ease;
     }
     .progress-label { font-size: 13px; color: #7c8db0; margin-bottom: 20px; text-align: right; }
 
     details.story-mini {
-      font-size: 14px;
-      color: #555;
-      background: #f7f9ff;
-      border-left: 3px solid #4f74e3;
-      border-radius: 8px;
-      padding: 12px 16px;
-      margin-bottom: 22px;
-      line-height: 1.75;
+      font-size: 14px; color: #555; background: #f7f9ff;
+      border-left: 3px solid #4f74e3; border-radius: 8px;
+      padding: 12px 16px; margin-bottom: 22px; line-height: 1.75;
     }
     details.story-mini summary {
-      font-weight: 700;
-      color: #4f74e3;
-      cursor: pointer;
-      font-size: 13px;
-      list-style: none;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      font-weight: 700; color: #4f74e3; cursor: pointer;
+      font-size: 13px; list-style: none;
+      display: flex; align-items: center; gap: 6px;
     }
     details.story-mini summary::before { content: '▶'; font-size: 9px; transition: transform 0.2s; }
     details.story-mini[open] summary::before { transform: rotate(90deg); }
@@ -239,160 +226,178 @@
     .options { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
 
     .option-btn {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      background: #f7f9ff;
-      border: 2px solid #dce3f5;
-      border-radius: 12px;
-      padding: 14px 18px;
-      font-size: 16px;
-      color: #1a1f36;
-      cursor: pointer;
-      text-align: left;
+      display: flex; align-items: center; gap: 14px;
+      background: #f7f9ff; border: 2px solid #dce3f5;
+      border-radius: 12px; padding: 14px 18px;
+      font-size: 16px; color: #1a1f36; cursor: pointer;
+      text-align: left; font-family: inherit;
       transition: border-color 0.15s, background 0.15s, transform 0.1s;
       width: 100%;
     }
     .option-btn:hover:not(:disabled) { border-color: #4f74e3; background: #eef2ff; transform: translateY(-1px); }
+    .option-btn:focus { outline: 2px solid #4f74e3; outline-offset: 2px; }
     .option-btn .letter {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      background: #dce3f5;
-      font-weight: 700;
-      font-size: 13px;
-      color: #4f74e3;
-      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      min-width: 30px; height: 30px; border-radius: 50%;
+      background: #dce3f5; font-weight: 700; font-size: 13px;
+      color: #4f74e3; flex-shrink: 0;
       transition: background 0.15s, color 0.15s;
     }
     .option-btn.correct { background: #eafaf1; border-color: #27ae60; }
     .option-btn.correct .letter { background: #27ae60; color: white; }
     .option-btn.wrong   { background: #fff0f0; border-color: #e74c3c; }
     .option-btn.wrong   .letter { background: #e74c3c; color: white; }
-    .option-btn:disabled { cursor: default; }
+    .option-btn:disabled { cursor: default; transform: none; }
 
-    .feedback-msg {
-      font-size: 15px;
-      font-weight: 600;
-      border-radius: 10px;
-      padding: 12px 16px;
-      margin-bottom: 20px;
-      display: none;
+    .feedback-box {
+      border-radius: 12px; padding: 14px 18px;
+      margin-bottom: 20px; display: none;
     }
-    .feedback-msg.correct { background: #eafaf1; color: #1e8449; display: block; }
-    .feedback-msg.wrong   { background: #fff0f0; color: #c0392b; display: block; }
+    .feedback-box.correct { background: #eafaf1; border: 1.5px solid #a3e6c0; display: block; }
+    .feedback-box.wrong   { background: #fff0f0; border: 1.5px solid #f5c0c0; display: block; }
+    .feedback-verdict { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .feedback-box.correct .feedback-verdict { color: #1e8449; }
+    .feedback-box.wrong   .feedback-verdict { color: #c0392b; }
+    .feedback-explanation { font-size: 14px; color: #555; line-height: 1.6; font-style: italic; }
 
-    /* ════════════════════════════════
-       SCREEN 3 — RESULTATEN
-    ════════════════════════════════ */
+    /* ════ RESULTS ════ */
     .results-icon  { font-size: 60px; text-align: center; margin-bottom: 12px; }
     .results-title { font-size: 26px; font-weight: 800; color: #1a1f36; text-align: center; margin-bottom: 6px; }
     .results-score { font-size: 18px; color: #7c8db0; text-align: center; margin-bottom: 28px; }
     .results-score span { color: #4f74e3; font-weight: 700; }
-
     .results-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
     .results-list li { padding: 12px 16px; border-radius: 10px; font-size: 14px; line-height: 1.5; }
     .results-list li.ok   { background: #eafaf1; color: #1e8449; }
     .results-list li.fail { background: #fff0f0; color: #c0392b; }
     .results-list li .q-label { font-weight: 700; display: block; margin-bottom: 2px; }
 
-    /* ── GEDEELDE KNOPPEN ── */
+    /* ── SHARED BUTTONS ── */
     .btn-primary {
-      display: block;
-      width: 100%;
-      background: #4f74e3;
-      color: white;
-      border: none;
-      border-radius: 12px;
-      padding: 16px;
-      font-size: 17px;
-      font-weight: 700;
-      cursor: pointer;
+      display: block; width: 100%; background: #4f74e3;
+      color: white; border: none; border-radius: 12px;
+      padding: 16px; font-size: 17px; font-weight: 700;
+      cursor: pointer; font-family: inherit;
       transition: background 0.15s, transform 0.1s;
     }
     .btn-primary:hover { background: #3a5fc9; transform: translateY(-1px); }
+    .btn-primary:focus { outline: 2px solid #3a5fc9; outline-offset: 2px; }
 
     .btn-secondary {
-      display: block;
-      width: 100%;
-      background: transparent;
-      color: #4f74e3;
-      border: 2px solid #4f74e3;
-      border-radius: 12px;
-      padding: 14px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 12px;
+      display: block; width: 100%; background: transparent;
+      color: #4f74e3; border: 2px solid #4f74e3;
+      border-radius: 12px; padding: 14px;
+      font-size: 16px; font-weight: 700; cursor: pointer;
+      margin-top: 12px; font-family: inherit;
       transition: background 0.15s;
     }
     .btn-secondary:hover { background: #eef2ff; }
+    .btn-secondary:focus { outline: 2px solid #4f74e3; outline-offset: 2px; }
+
+    @media (max-width: 500px) {
+      body { padding: 16px 12px; }
+      .card { padding: 24px 20px; }
+      .lang-options { flex-direction: column; }
+      .lang-option-btn { flex-direction: row; padding: 18px 16px; }
+      .lang-flag { font-size: 32px; }
+    }
   </style>
 </head>
 <body>
 <div class="card">
 
-  <!-- Toggle knop — altijd zichtbaar (verborgen op taalkeuze-scherm) -->
-  <button class="lang-toggle hidden" id="lang-toggle" onclick="toggleLang()">NL</button>
+  <button class="lang-indicator hidden" id="lang-indicator" onclick="goToLangScreen()">
+    <span id="ui-indicator-flag"></span>
+    <span id="ui-indicator-label"></span>
+  </button>
 
-  <!-- ════ SCHERM -1: TAALKEUZE ════ -->
-  <div id="screen-lang" class="screen active">
-    <div class="lang-select-header">
-      <h1>Choose your language</h1>
-      <p>Kies je taal</p>
+  <div id="word-popup" class="word-popup hidden" role="dialog" aria-label="Word explanation">
+    <div class="popup-header">
+      <span class="popup-word" id="popup-word"></span>
+      <button class="popup-close" onclick="closeWordPopup()" aria-label="Close">×</button>
+    </div>
+    <div class="popup-translation" id="popup-translation"></div>
+    <div class="popup-example-label" id="popup-example-label"></div>
+    <div class="popup-example" id="popup-example"></div>
+  </div>
+
+  <!-- ════ SCREEN 1: INTERFACE LANGUAGE ════ -->
+  <div id="screen-ui-lang" class="screen active">
+    <div class="lang-screen-header">
+      <h1>Choose your language<br><span style="font-size:18px;font-weight:600;color:#7c8db0">Kies je taal</span></h1>
+      <p>For buttons and instructions<br><span style="font-size:13px;color:#aab">Voor knoppen en uitleg</span></p>
     </div>
     <div class="lang-options">
-      <button class="lang-option-btn" onclick="selectLang('en')">
+      <button class="lang-option-btn" onclick="selectUiLang('en')">
         <span class="lang-flag">🇬🇧</span>
         <span class="lang-name">English</span>
       </button>
-      <button class="lang-option-btn" onclick="selectLang('nl')">
+      <button class="lang-option-btn" onclick="selectUiLang('nl')">
         <span class="lang-flag">🇳🇱</span>
         <span class="lang-name">Nederlands</span>
       </button>
     </div>
   </div>
 
-  <!-- ════ SCHERM 0: VERHAALKEUZE ════ -->
+  <!-- ════ SCREEN 2: LEARNING LANGUAGE ════ -->
+  <div id="screen-learn-lang" class="screen">
+    <div class="lang-screen-header">
+      <h1 id="ui-learn-title"></h1>
+      <p id="ui-learn-subtitle"></p>
+    </div>
+    <div class="lang-options">
+      <button class="lang-option-btn" onclick="selectLearnLang('en')">
+        <span class="lang-flag">🇬🇧</span>
+        <span class="lang-name">English</span>
+      </button>
+      <button class="lang-option-btn" onclick="selectLearnLang('nl')">
+        <span class="lang-flag">🇳🇱</span>
+        <span class="lang-name">Nederlands</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ════ SCREEN 3: STORY SELECTION ════ -->
   <div id="screen-select" class="screen">
     <div class="select-header">
-      <p id="ui-lang-label"></p>
+      <p class="label-sm" id="ui-lang-label"></p>
       <h1 id="ui-choose-story"></h1>
     </div>
     <div class="story-cards" id="story-cards-wrap"></div>
   </div>
 
-  <!-- ════ SCHERM 1: VERHAAL LEZEN ════ -->
+  <!-- ════ SCREEN 4: STORY READING ════ -->
   <div id="screen-story" class="screen">
     <button class="back-link" id="ui-back-link" onclick="showScreen('screen-select')"></button>
     <p class="story-label" id="ui-read-story"></p>
     <h1 class="story-title" id="story-title"></h1>
+    <div class="keywords-bar hidden" id="keywords-bar">
+      <span class="keywords-bar-label" id="ui-keywords-label"></span>
+      <span id="keywords-chips-wrap"></span>
+    </div>
     <div class="story-text" id="story-body"></div>
     <button class="btn-primary" id="ui-start-btn" onclick="startQuestions()"></button>
   </div>
 
-  <!-- ════ SCHERM 2: VRAGEN ════ -->
+  <!-- ════ SCREEN 5: QUESTIONS ════ -->
   <div id="screen-question" class="screen">
     <div class="progress-bar-wrap">
       <div class="progress-bar-fill" id="progress-fill"></div>
     </div>
     <p class="progress-label" id="progress-label"></p>
-
     <details class="story-mini" id="story-mini-wrap">
       <summary><span id="ui-reread"></span></summary>
       <div class="mini-text" id="story-mini-text"></div>
     </details>
-
     <p class="question-text" id="question-text"></p>
     <div class="options" id="options-wrap"></div>
-    <div class="feedback-msg" id="feedback-msg"></div>
+    <div class="feedback-box" id="feedback-box">
+      <div class="feedback-verdict" id="feedback-verdict"></div>
+      <div class="feedback-explanation" id="feedback-explanation"></div>
+    </div>
     <button class="btn-primary" id="next-btn" style="display:none;" onclick="nextQuestion()"></button>
   </div>
 
-  <!-- ════ SCHERM 3: RESULTATEN ════ -->
+  <!-- ════ SCREEN 6: RESULTS ════ -->
   <div id="screen-results" class="screen">
     <div class="results-icon" id="results-icon"></div>
     <h2 class="results-title" id="results-title"></h2>
@@ -406,20 +411,23 @@
 </div>
 
 <script>
-  // ══════════════════════════════════════════════
-  //  VERTALINGEN (UI-teksten)
-  // ══════════════════════════════════════════════
+  // ══════════════════════════════════════════
+  //  I18N
+  // ══════════════════════════════════════════
   const i18n = {
     en: {
-      langLabel:      "English Stories",
+      learnTitle:     "What do you want to practise?",
+      learnSubtitle:  "Choose the language you want to learn.",
+      langLabel:      "Stories",
       chooseStory:    "Choose a story",
       readStory:      "Read the story",
       allStories:     "← All stories",
-      startQuestions: "I'm ready — start questions!",
+      startQuestions: "I'm ready — start the questions!",
       reread:         "Re-read the story",
+      keywordsLabel:  "Key words:",
       questionOf:     (x, y) => `Question ${x} of ${y}`,
-      correct:        "Correct! Well done.",
-      wrong:          (ans) => `Not quite. The correct answer was: "${ans}"`,
+      correct:        "Correct!",
+      wrong:          (ans) => `Not quite. The answer was: "${ans}"`,
       nextQuestion:   "Next question →",
       seeResults:     "See my results!",
       perfectScore:   "Perfect score!",
@@ -434,18 +442,22 @@
       correctAnswer:  "Correct:",
       questionsTag:   "questions",
       doneTag:        "Done",
-      toggleLabel:    "NL",
+      exampleLabel:   "Example:",
+      indicatorLabel: "Learning",
     },
     nl: {
-      langLabel:      "Nederlandse Verhalen",
+      learnTitle:     "Wat wil je oefenen?",
+      learnSubtitle:  "Kies de taal die je wilt leren.",
+      langLabel:      "Verhalen",
       chooseStory:    "Kies een verhaal",
       readStory:      "Lees het verhaal",
       allStories:     "← Alle verhalen",
       startQuestions: "Ik ben klaar — start de vragen!",
       reread:         "Herlees het verhaal",
+      keywordsLabel:  "Sleutelwoorden:",
       questionOf:     (x, y) => `Vraag ${x} van ${y}`,
-      correct:        "Correct! Goed gedaan.",
-      wrong:          (ans) => `Niet helemaal. Het juiste antwoord was: "${ans}"`,
+      correct:        "Correct!",
+      wrong:          (ans) => `Niet helemaal. Het antwoord was: "${ans}"`,
       nextQuestion:   "Volgende vraag →",
       seeResults:     "Bekijk mijn resultaten!",
       perfectScore:   "Perfecte score!",
@@ -460,13 +472,14 @@
       correctAnswer:  "Juist:",
       questionsTag:   "vragen",
       doneTag:        "Klaar",
-      toggleLabel:    "EN",
+      exampleLabel:   "Voorbeeld:",
+      indicatorLabel: "Je leert",
     }
   };
 
-  // ══════════════════════════════════════════════
-  //  VERHALEN (tweetalig)
-  // ══════════════════════════════════════════════
+  // ══════════════════════════════════════════
+  //  STORIES
+  // ══════════════════════════════════════════
   const stories = [
     {
       emoji: "🧺",
@@ -474,6 +487,12 @@
       en: {
         title:  "Family Picnic",
         teaser: "James and his family spend a sunny Sunday in the park.",
+        keywords: [
+          { word: "picnic",       translation: { nl: "picknick" },      meaning: { en: "a meal eaten outside in nature" },            example: "We had a picnic in the park." },
+          { word: "blanket",      translation: { nl: "kleedje" },       meaning: { en: "a piece of cloth to sit on" },                example: "We sat on a blanket on the grass." },
+          { word: "sandwiches",   translation: { nl: "boterhammen" },   meaning: { en: "bread with filling inside" },                 example: "She made sandwiches with cheese." },
+          { word: "hide and seek",translation: { nl: "verstoppertje" }, meaning: { en: "a game where you hide and someone finds you" },example: "The children played hide and seek." }
+        ],
         paragraphs: [
           "I am James. This is my family.",
           "Last Sunday, my family went on a picnic. We went to the park. The sun was out and it was a nice day.",
@@ -483,16 +502,22 @@
           "We all laughed. It was a fun day at the park. I love my family."
         ],
         questions: [
-          { question: "What is the name of the boy?",             options: ["Tom","Jack","James","Sam"],                                                              correct: 2 },
-          { question: "Where did the family go last Sunday?",     options: ["To the beach","To a restaurant","To school","To the park"],                              correct: 3 },
-          { question: "What did mom bring?",                      options: ["Cookies, milk, and fruit","Sandwiches, apples, and juice","Pizza, chips, and water","Cake, tea, and biscuits"], correct: 1 },
-          { question: "What game did they play after eating?",    options: ["Football","Tag","Hide and seek","Catch"],                                                correct: 2 },
-          { question: "Where did James hide?",                    options: ["Behind a bush","Under the blanket","Behind his mom","Behind the tree"],                  correct: 3 }
+          { question: "What is the name of the boy?",          options: ["Tom","Jack","James","Sam"],                                                                   correct: 2, explanation: { en: "The story starts with: \"I am James.\"",           nl: "Het verhaal begint met: \"I am James.\""           } },
+          { question: "Where did the family go last Sunday?",  options: ["To the beach","To a restaurant","To school","To the park"],                                    correct: 3, explanation: { en: "The story says: \"We went to the park.\"",            nl: "In het verhaal staat: \"We went to the park.\""            } },
+          { question: "What did mom bring?",                   options: ["Cookies, milk, and fruit","Sandwiches, apples, and juice","Pizza, chips, and water","Cake, tea, and biscuits"], correct: 1, explanation: { en: "The story says: \"She had sandwiches, apples, and juice.\"", nl: "In het verhaal staat: \"She had sandwiches, apples, and juice.\"" } },
+          { question: "What game did they play after eating?", options: ["Football","Tag","Hide and seek","Catch"],                                                       correct: 2, explanation: { en: "The story says: \"we played hide and seek.\"",       nl: "In het verhaal staat: \"we played hide and seek.\""       } },
+          { question: "Where did James hide?",                 options: ["Behind a bush","Under the blanket","Behind his mom","Behind the tree"],                         correct: 3, explanation: { en: "The story says: \"I hid behind the tree.\"",          nl: "In het verhaal staat: \"I hid behind the tree.\""          } }
         ]
       },
       nl: {
         title:  "Familiedag in het Park",
         teaser: "James en zijn familie brengen een zonnige zondag door in het park.",
+        keywords: [
+          { word: "picknick",      translation: { en: "picnic" },          meaning: { nl: "buiten eten in de natuur" },               example: "We hadden een picknick in het park." },
+          { word: "kleedje",       translation: { en: "blanket / mat" },   meaning: { nl: "een stuk stof om op te zitten" },           example: "We zaten op een kleedje in het gras." },
+          { word: "boterhammen",   translation: { en: "sandwiches" },      meaning: { nl: "brood met beleg" },                        example: "Ze had boterhammen met kaas gemaakt." },
+          { word: "verstoppertje", translation: { en: "hide and seek" },   meaning: { nl: "een spel waarbij je je verstopt" },        example: "De kinderen speelden verstoppertje." }
+        ],
         paragraphs: [
           "Ik ben James. Dit is mijn familie.",
           "Afgelopen zondag gingen we op een picknick. We gingen naar het park. De zon scheen en het was een mooie dag.",
@@ -502,11 +527,11 @@
           "We lachten allemaal. Het was een leuke dag in het park. Ik hou van mijn familie."
         ],
         questions: [
-          { question: "Wat is de naam van de jongen?",                    options: ["Tom","Jack","James","Sam"],                                                                correct: 2 },
-          { question: "Waar ging de familie heen afgelopen zondag?",      options: ["Naar het strand","Naar een restaurant","Naar school","Naar het park"],                    correct: 3 },
-          { question: "Wat nam moeder mee?",                              options: ["Koekjes, melk en fruit","Boterhammen, appels en sap","Pizza, chips en water","Taart, thee en koekjes"], correct: 1 },
-          { question: "Welk spel speelden ze na het eten?",               options: ["Voetbal","Tikkertje","Verstoppertje","Vangen"],                                            correct: 2 },
-          { question: "Waar verstopte James zich?",                       options: ["Achter een struik","Onder het kleedje","Achter zijn moeder","Achter de boom"],             correct: 3 }
+          { question: "Wat is de naam van de jongen?",               options: ["Tom","Jack","James","Sam"],                                                                     correct: 2, explanation: { nl: "Het verhaal begint met: \"Ik ben James.\"",           en: "The story starts with: \"Ik ben James.\""          } },
+          { question: "Waar ging de familie heen afgelopen zondag?", options: ["Naar het strand","Naar een restaurant","Naar school","Naar het park"],                           correct: 3, explanation: { nl: "In het verhaal staat: \"We gingen naar het park.\"",   en: "The story says: \"We gingen naar het park.\""          } },
+          { question: "Wat nam moeder mee?",                         options: ["Koekjes, melk en fruit","Boterhammen, appels en sap","Pizza, chips en water","Taart, thee en koekjes"], correct: 1, explanation: { nl: "In het verhaal staat: \"Ze had boterhammen, appels en sap.\"", en: "The story says: \"Ze had boterhammen, appels en sap.\"" } },
+          { question: "Welk spel speelden ze na het eten?",          options: ["Voetbal","Tikkertje","Verstoppertje","Vangen"],                                                  correct: 2, explanation: { nl: "In het verhaal staat: \"speelden we verstoppertje.\"",   en: "The story says: \"speelden we verstoppertje.\""        } },
+          { question: "Waar verstopte James zich?",                  options: ["Achter een struik","Onder het kleedje","Achter zijn moeder","Achter de boom"],                    correct: 3, explanation: { nl: "In het verhaal staat: \"Ik verstopte me achter de boom.\"", en: "The story says: \"Ik verstopte me achter de boom.\""   } }
         ]
       }
     },
@@ -516,6 +541,12 @@
       en: {
         title:  "My Dog Max",
         teaser: "Meet Max — the funniest dog in the neighbourhood.",
+        keywords: [
+          { word: "neighbourhood", translation: { nl: "buurt" },     meaning: { en: "the area near your home" },                     example: "There are many shops in my neighbourhood." },
+          { word: "bowl",          translation: { nl: "bak" },        meaning: { en: "a round container for food or water" },         example: "The dog drinks from a bowl." },
+          { word: "lead",          translation: { nl: "riem" },       meaning: { en: "a strap used to walk a dog" },                  example: "She held the lead tightly." },
+          { word: "snores",        translation: { nl: "snurkt" },     meaning: { en: "makes a loud noise while sleeping" },           example: "He snores loudly every night." }
+        ],
         paragraphs: [
           "My name is Lisa. I have a dog. His name is Max.",
           "Max is big and brown. He has long ears and a short tail. He loves to run in the garden.",
@@ -525,16 +556,22 @@
           "I love Max very much. He is my best friend."
         ],
         questions: [
-          { question: "What is the name of the girl?",   options: ["Emma","Lisa","Anna","Sara"],                                                         correct: 1 },
-          { question: "What does Max look like?",        options: ["Small and white","Big and brown","Tiny and black","Tall and grey"],                   correct: 1 },
-          { question: "What does Max do after eating?",  options: ["He plays with a ball","He drinks water from his bowl","He runs in the garden","He sleeps on the sofa"], correct: 1 },
-          { question: "Where do they walk past?",        options: ["The park and the river","The beach and the shops","The shops and the school","The school and the park"], correct: 2 },
-          { question: "What colour is Max's bed?",       options: ["Blue","Green","Yellow","Red"],                                                        correct: 3 }
+          { question: "What is the name of the girl?",  options: ["Emma","Lisa","Anna","Sara"],                                                             correct: 1, explanation: { en: "The story says: \"My name is Lisa.\"",                nl: "In het verhaal staat: \"My name is Lisa.\""                } },
+          { question: "What does Max look like?",       options: ["Small and white","Big and brown","Tiny and black","Tall and grey"],                       correct: 1, explanation: { en: "The story says: \"Max is big and brown.\"",             nl: "In het verhaal staat: \"Max is big and brown.\""             } },
+          { question: "What does Max do after eating?", options: ["He plays with a ball","He drinks water from his bowl","He runs in the garden","He sleeps on the sofa"], correct: 1, explanation: { en: "The story says: \"he drinks water from his bowl.\"",   nl: "In het verhaal staat: \"he drinks water from his bowl.\""   } },
+          { question: "Where do they walk past?",       options: ["The park and the river","The beach and the shops","The shops and the school","The school and the park"], correct: 2, explanation: { en: "The story says: \"past the shops and the school.\"",   nl: "In het verhaal staat: \"past the shops and the school.\""   } },
+          { question: "What colour is Max's bed?",      options: ["Blue","Green","Yellow","Red"],                                                            correct: 3, explanation: { en: "The story says: \"his big red bed.\"",                nl: "In het verhaal staat: \"his big red bed.\""                } }
         ]
       },
       nl: {
         title:  "Mijn Hond Max",
         teaser: "Maak kennis met Max — de grappigste hond van de buurt.",
+        keywords: [
+          { word: "buurt",   translation: { en: "neighbourhood" }, meaning: { nl: "de omgeving bij je thuis" },               example: "Er zijn veel winkels in mijn buurt." },
+          { word: "bak",     translation: { en: "bowl" },          meaning: { nl: "een ronde bak voor eten of water" },        example: "De hond drinkt uit een bak." },
+          { word: "riem",    translation: { en: "lead / leash" },  meaning: { nl: "een koord om een hond mee uit te laten" }, example: "Ze hield de riem stevig vast." },
+          { word: "snurkt",  translation: { en: "snores" },        meaning: { nl: "maakt een luid geluid tijdens het slapen" },example: "Hij snurkt elke nacht." }
+        ],
         paragraphs: [
           "Ik heet Lisa. Ik heb een hond. Hij heet Max.",
           "Max is groot en bruin. Hij heeft lange oren en een korte staart. Hij rent graag in de tuin.",
@@ -544,117 +581,137 @@
           "Ik hou heel veel van Max. Hij is mijn beste vriend."
         ],
         questions: [
-          { question: "Wat is de naam van het meisje?",  options: ["Emma","Lisa","Anna","Sara"],                                                                   correct: 1 },
-          { question: "Hoe ziet Max eruit?",             options: ["Klein en wit","Groot en bruin","Piepklein en zwart","Lang en grijs"],                           correct: 1 },
-          { question: "Wat doet Max na het eten?",       options: ["Hij speelt met een bal","Hij drinkt water uit zijn bak","Hij rent in de tuin","Hij slaapt op de bank"], correct: 1 },
-          { question: "Waar lopen ze langs?",            options: ["Het park en de rivier","Het strand en de winkels","De winkels en de school","De school en het park"], correct: 2 },
-          { question: "Welke kleur heeft Max zijn mand?",options: ["Blauw","Groen","Geel","Rood"],                                                                  correct: 3 }
+          { question: "Wat is de naam van het meisje?", options: ["Emma","Lisa","Anna","Sara"],                                                                        correct: 1, explanation: { nl: "In het verhaal staat: \"Ik heet Lisa.\"",                en: "The story says: \"Ik heet Lisa.\""                } },
+          { question: "Hoe ziet Max eruit?",            options: ["Klein en wit","Groot en bruin","Piepklein en zwart","Lang en grijs"],                                correct: 1, explanation: { nl: "In het verhaal staat: \"Max is groot en bruin.\"",       en: "The story says: \"Max is groot en bruin.\""        } },
+          { question: "Wat doet Max na het eten?",      options: ["Hij speelt met een bal","Hij drinkt water uit zijn bak","Hij rent in de tuin","Hij slaapt op de bank"], correct: 1, explanation: { nl: "In het verhaal staat: \"drinkt hij water uit zijn bak.\"", en: "The story says: \"drinkt hij water uit zijn bak.\""  } },
+          { question: "Waar lopen ze langs?",           options: ["Het park en de rivier","Het strand en de winkels","De winkels en de school","De school en het park"], correct: 2, explanation: { nl: "In het verhaal staat: \"langs de winkels en de school.\"", en: "The story says: \"langs de winkels en de school.\""  } },
+          { question: "Welke kleur heeft Max zijn mand?",options: ["Blauw","Groen","Geel","Rood"],                                                                      correct: 3, explanation: { nl: "In het verhaal staat: \"zijn grote rode mand.\"",        en: "The story says: \"zijn grote rode mand.\""          } }
         ]
       }
     }
   ];
 
-  // ══════════════════════════════════════════════
+  // ══════════════════════════════════════════
   //  STATE
-  // ══════════════════════════════════════════════
-  let lang         = "en";
-  let currentStory = null;   // root story object (taal-neutraal)
-  let currentQ     = 0;
-  let score        = 0;
-  let answers      = [];
-  const progress   = {};     // { idx: { done, best } } — taal-neutraal
+  // ══════════════════════════════════════════
+  let interfaceLang   = "en";
+  let learningLang    = "en";
+  let currentStory    = null;
+  let currentQ        = 0;
+  let score           = 0;
+  let answers         = [];
+  let currentKeywords = [];
 
-  // Helper: geeft het taalspecifieke deel van een verhaal
-  function storyContent(story) { return story[lang]; }
+  const tr  = ()  => i18n[interfaceLang];
+  const sc  = (s) => s[learningLang];
 
-  // ══════════════════════════════════════════════
-  //  TAAL
-  // ══════════════════════════════════════════════
-  function selectLang(selected) {
-    lang = selected;
+  // ══════════════════════════════════════════
+  //  PROGRESS (localStorage)
+  // ══════════════════════════════════════════
+  function loadProgress() {
+    try { return JSON.parse(localStorage.getItem("lapp_v1") || "{}"); }
+    catch { return {}; }
+  }
+  function saveProgress(idx, s, total) {
+    const p = loadProgress();
+    if (!p[idx] || s > (p[idx].best || 0)) {
+      p[idx] = { done: true, best: s, total };
+    }
+    try { localStorage.setItem("lapp_v1", JSON.stringify(p)); } catch {}
+  }
+
+  // ══════════════════════════════════════════
+  //  LANGUAGE SELECTION
+  // ══════════════════════════════════════════
+  function selectUiLang(lang) {
+    interfaceLang = lang;
     document.documentElement.setAttribute("lang", lang);
-    document.getElementById("lang-toggle").textContent = i18n[lang].toggleLabel;
-    document.getElementById("lang-toggle").classList.remove("hidden");
     applyTranslations();
+    showScreen("screen-learn-lang");
+  }
+
+  function selectLearnLang(lang) {
+    learningLang = lang;
+    updateIndicator();
+    applyTranslations();
+    buildSelectionCards();
     showScreen("screen-select");
   }
 
-  function toggleLang() {
-    lang = (lang === "en") ? "nl" : "en";
-    document.documentElement.setAttribute("lang", lang);
-    document.getElementById("lang-toggle").textContent = i18n[lang].toggleLabel;
-    applyTranslations();
-
-    // Herrender het actieve scherm
-    const activeId = document.querySelector(".screen.active")?.id;
-    switch (activeId) {
-      case "screen-select":
-        buildSelectionCards();
-        break;
-      case "screen-story":
-        if (currentStory) updateStoryScreen();
-        break;
-      case "screen-question":
-        if (currentStory) renderQuestion();
-        break;
-      case "screen-results":
-        renderResults();
-        break;
-    }
+  function goToLangScreen() {
+    showScreen("screen-ui-lang");
   }
 
+  function updateIndicator() {
+    const flags = { en: "🇬🇧", nl: "🇳🇱" };
+    const names = { en: "English", nl: "Nederlands" };
+    document.getElementById("ui-indicator-flag").textContent  = flags[learningLang];
+    document.getElementById("ui-indicator-label").textContent = names[learningLang];
+  }
+
+  // ══════════════════════════════════════════
+  //  TRANSLATIONS
+  // ══════════════════════════════════════════
   function applyTranslations() {
-    const t = i18n[lang];
-    document.getElementById("ui-lang-label").textContent    = t.langLabel;
-    document.getElementById("ui-choose-story").textContent  = t.chooseStory;
-    document.getElementById("ui-back-link").textContent     = t.allStories;
-    document.getElementById("ui-read-story").textContent    = t.readStory;
-    document.getElementById("ui-start-btn").textContent     = t.startQuestions;
-    document.getElementById("ui-reread").textContent        = t.reread;
-    document.getElementById("ui-try-again").textContent     = t.tryAgain;
-    document.getElementById("ui-reread-story").textContent  = t.rereadStory;
-    document.getElementById("ui-choose-another").textContent = t.chooseAnother;
+    const t = tr();
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    set("ui-learn-title",    t.learnTitle);
+    set("ui-learn-subtitle", t.learnSubtitle);
+    set("ui-lang-label",     t.langLabel);
+    set("ui-choose-story",   t.chooseStory);
+    set("ui-back-link",      t.allStories);
+    set("ui-read-story",     t.readStory);
+    set("ui-start-btn",      t.startQuestions);
+    set("ui-keywords-label", t.keywordsLabel);
+    set("ui-reread",         t.reread);
+    set("ui-try-again",      t.tryAgain);
+    set("ui-reread-story",   t.rereadStory);
+    set("ui-choose-another", t.chooseAnother);
   }
 
-  // ══════════════════════════════════════════════
-  //  VERHAALKEUZE
-  // ══════════════════════════════════════════════
+  // ══════════════════════════════════════════
+  //  SCREENS
+  // ══════════════════════════════════════════
+  function showScreen(id) {
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    closeWordPopup();
+    const langScreens = ["screen-ui-lang", "screen-learn-lang"];
+    document.getElementById("lang-indicator").classList.toggle("hidden", langScreens.includes(id));
+    if (id === "screen-select") buildSelectionCards();
+  }
+
+  // ══════════════════════════════════════════
+  //  STORY SELECTION
+  // ══════════════════════════════════════════
   function buildSelectionCards() {
-    const t    = i18n[lang];
+    const t    = tr();
+    const prog = loadProgress();
     const wrap = document.getElementById("story-cards-wrap");
     wrap.innerHTML = "";
-
     stories.forEach((story, idx) => {
-      const c    = storyContent(story);
-      const p    = progress[idx];
+      const c    = sc(story);
+      const p    = prog[idx];
       const done = p && p.done;
       const best = p ? p.best : null;
-
-      const card = document.createElement("div");
+      const card = document.createElement("button");
       card.className = "story-card";
-      card.onclick   = () => openStory(idx);
-
+      card.setAttribute("aria-label", c.title);
+      card.onclick = () => openStory(idx);
       let dots = "";
-      for (let d = 1; d <= 3; d++) {
-        dots += `<span class="dot${d <= story.difficulty ? " filled" : ""}"></span>`;
-      }
-
+      for (let d = 1; d <= 3; d++) dots += `<span class="dot${d <= story.difficulty ? " filled" : ""}"></span>`;
       const tagHTML = done
         ? `<span class="tag done">✓ ${t.doneTag} · ${best}/${c.questions.length}</span>`
         : `<span class="tag">${c.questions.length} ${t.questionsTag}</span>`;
-
       card.innerHTML = `
         <div class="story-card-emoji">${story.emoji}</div>
         <div class="story-card-info">
-          <h2>${c.title}</h2>
-          <p>${c.teaser}</p>
+          <h2>${escHTML(c.title)}</h2>
+          <p>${escHTML(c.teaser)}</p>
         </div>
-        <div class="story-card-meta">
-          ${tagHTML}
-          <div class="difficulty">${dots}</div>
-        </div>
-        <span class="arrow-icon">›</span>
-      `;
+        <div class="story-card-meta">${tagHTML}<div class="difficulty">${dots}</div></div>
+        <span class="arrow-icon" aria-hidden="true">›</span>`;
       wrap.appendChild(card);
     });
   }
@@ -666,129 +723,168 @@
     showScreen("screen-story");
   }
 
+  // ══════════════════════════════════════════
+  //  KEYWORD MARKUP
+  // ══════════════════════════════════════════
+  function escHTML(s) {
+    return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+  function escReg(s) { return s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"); }
+
+  function markupText(text) {
+    if (!currentKeywords.length) return escHTML(text);
+    const sorted = currentKeywords.map((kw, i) => ({ ...kw, i })).sort((a, b) => b.word.length - a.word.length);
+    let result = escHTML(text);
+    sorted.forEach(kw => {
+      const pat = new RegExp(`\\b(${escReg(escHTML(kw.word))})\\b`, "gi");
+      result = result.replace(pat, (m) =>
+        `<button class="keyword-btn" onclick="showWordPopup(event,${kw.i})">${m}</button>`
+      );
+    });
+    return result;
+  }
+
   function updateStoryScreen() {
-    const c = storyContent(currentStory);
+    const c = sc(currentStory);
+    currentKeywords = c.keywords || [];
     document.getElementById("story-title").textContent = c.title;
-    const bodyEl = document.getElementById("story-body");
-    bodyEl.innerHTML = c.paragraphs.map(p => `<p>${p}</p>`).join("");
-    const miniEl = document.getElementById("story-mini-text");
-    miniEl.innerHTML = c.paragraphs.map(p => `<p>${p}</p>`).join("");
-  }
 
-  // ══════════════════════════════════════════════
-  //  SCHERMEN
-  // ══════════════════════════════════════════════
-  function showScreen(id) {
-    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    if (id === "screen-select") buildSelectionCards();
-    // Toggle verbergen op taalkeuze-scherm
-    const toggle = document.getElementById("lang-toggle");
-    if (id === "screen-lang") {
-      toggle.classList.add("hidden");
+    const bar = document.getElementById("keywords-bar");
+    const chips = document.getElementById("keywords-chips-wrap");
+    if (currentKeywords.length) {
+      bar.classList.remove("hidden");
+      chips.innerHTML = currentKeywords.map((kw, i) =>
+        `<button class="keyword-chip" onclick="showWordPopup(event,${i})">${escHTML(kw.word)}</button>`
+      ).join("");
     } else {
-      toggle.classList.remove("hidden");
+      bar.classList.add("hidden");
     }
+
+    document.getElementById("story-body").innerHTML = c.paragraphs.map(p => `<p>${markupText(p)}</p>`).join("");
+    document.getElementById("story-mini-text").innerHTML = c.paragraphs.map(p => `<p>${escHTML(p)}</p>`).join("");
   }
 
-  // ══════════════════════════════════════════════
-  //  VRAGEN
-  // ══════════════════════════════════════════════
+  // ══════════════════════════════════════════
+  //  WORD POPUP
+  // ══════════════════════════════════════════
+  function showWordPopup(event, idx) {
+    event.stopPropagation();
+    const kw     = currentKeywords[idx];
+    const t      = tr();
+    const popup  = document.getElementById("word-popup");
+    const card   = document.querySelector(".card");
+
+    const translation = (interfaceLang !== learningLang)
+      ? (kw.translation[interfaceLang] || "")
+      : (kw.meaning[interfaceLang] || "");
+
+    document.getElementById("popup-word").textContent        = kw.word;
+    document.getElementById("popup-translation").textContent = translation;
+    document.getElementById("popup-example-label").textContent = t.exampleLabel;
+    document.getElementById("popup-example").textContent     = kw.example || "";
+
+    popup.classList.remove("hidden");
+    const br = event.target.getBoundingClientRect();
+    const cr = card.getBoundingClientRect();
+    let top  = br.bottom - cr.top + 8;
+    let left = br.left - cr.left;
+    const pw = 280;
+    if (left + pw > card.offsetWidth - 16) left = card.offsetWidth - pw - 16;
+    if (left < 8) left = 8;
+    popup.style.top  = top + "px";
+    popup.style.left = left + "px";
+  }
+
+  function closeWordPopup() {
+    document.getElementById("word-popup").classList.add("hidden");
+  }
+
+  document.addEventListener("click", (e) => {
+    const popup = document.getElementById("word-popup");
+    if (!popup.classList.contains("hidden") && !popup.contains(e.target)) closeWordPopup();
+  });
+
+  // ══════════════════════════════════════════
+  //  QUESTIONS
+  // ══════════════════════════════════════════
   function startQuestions() {
-    currentQ = 0;
-    score    = 0;
-    answers  = [];
+    currentQ = 0; score = 0; answers = [];
     renderQuestion();
     showScreen("screen-question");
   }
 
   function renderQuestion() {
-    const t     = i18n[lang];
-    const c     = storyContent(currentStory);
+    const t     = tr();
+    const c     = sc(currentStory);
     const q     = c.questions[currentQ];
     const total = c.questions.length;
 
-    const pct = (currentQ / total) * 100;
-    document.getElementById("progress-fill").style.width = pct + "%";
-    document.getElementById("progress-label").textContent = t.questionOf(currentQ + 1, total);
-
-    document.getElementById("question-text").textContent = q.question;
+    document.getElementById("progress-fill").style.width    = (currentQ / total * 100) + "%";
+    document.getElementById("progress-label").textContent   = t.questionOf(currentQ + 1, total);
+    document.getElementById("question-text").textContent    = q.question;
 
     const wrap = document.getElementById("options-wrap");
     wrap.innerHTML = "";
-    const letters = ["A", "B", "C", "D"];
-    q.options.forEach((opt, i) => {
+    ["A","B","C","D"].forEach((letter, i) => {
+      if (i >= q.options.length) return;
       const btn = document.createElement("button");
       btn.className = "option-btn";
-      btn.innerHTML = `<span class="letter">${letters[i]}</span> ${opt}`;
+      btn.innerHTML = `<span class="letter">${letter}</span> ${escHTML(q.options[i])}`;
       btn.onclick   = () => selectAnswer(i);
       wrap.appendChild(btn);
     });
 
-    const fb = document.getElementById("feedback-msg");
-    fb.className   = "feedback-msg";
-    fb.textContent = "";
+    document.getElementById("feedback-box").className = "feedback-box";
+    document.getElementById("feedback-verdict").textContent     = "";
+    document.getElementById("feedback-explanation").textContent = "";
     document.getElementById("next-btn").style.display = "none";
     document.getElementById("story-mini-wrap").removeAttribute("open");
   }
 
   function selectAnswer(chosen) {
-    const t       = i18n[lang];
-    const c       = storyContent(currentStory);
+    const t       = tr();
+    const c       = sc(currentStory);
     const q       = c.questions[currentQ];
-    const correct = q.correct;
-    const isRight = chosen === correct;
-
+    const isRight = chosen === q.correct;
     if (isRight) score++;
-    answers.push({ correct: isRight, chosen, right: correct });
+    answers.push({ correct: isRight, chosen, right: q.correct });
 
     document.querySelectorAll(".option-btn").forEach((btn, i) => {
       btn.disabled = true;
-      if (i === correct) btn.classList.add("correct");
+      if (i === q.correct) btn.classList.add("correct");
       if (i === chosen && !isRight) btn.classList.add("wrong");
     });
 
-    const fb = document.getElementById("feedback-msg");
-    if (isRight) {
-      fb.textContent = t.correct;
-      fb.className   = "feedback-msg correct";
-    } else {
-      fb.textContent = t.wrong(q.options[correct]);
-      fb.className   = "feedback-msg wrong";
-    }
+    const fb = document.getElementById("feedback-box");
+    fb.className = "feedback-box " + (isRight ? "correct" : "wrong");
+    document.getElementById("feedback-verdict").textContent =
+      isRight ? t.correct : t.wrong(q.options[q.correct]);
+    document.getElementById("feedback-explanation").textContent =
+      q.explanation ? (q.explanation[interfaceLang] || "") : "";
 
-    const nextBtn  = document.getElementById("next-btn");
+    const nextBtn = document.getElementById("next-btn");
     nextBtn.style.display = "block";
-    const isLast   = currentQ === c.questions.length - 1;
-    nextBtn.textContent = isLast ? t.seeResults : t.nextQuestion;
+    nextBtn.textContent = currentQ === c.questions.length - 1 ? t.seeResults : t.nextQuestion;
   }
 
   function nextQuestion() {
     currentQ++;
-    const c = storyContent(currentStory);
+    const c = sc(currentStory);
     if (currentQ < c.questions.length) {
       renderQuestion();
     } else {
-      saveProgress();
+      saveProgress(currentStory._idx, score, c.questions.length);
       renderResults();
       showScreen("screen-results");
     }
   }
 
-  // ══════════════════════════════════════════════
-  //  RESULTATEN
-  // ══════════════════════════════════════════════
-  function saveProgress() {
-    const idx = currentStory._idx;
-    if (!progress[idx] || score > progress[idx].best) {
-      progress[idx] = { done: true, best: score };
-    }
-  }
-
+  // ══════════════════════════════════════════
+  //  RESULTS
+  // ══════════════════════════════════════════
   function renderResults() {
-    const t     = i18n[lang];
-    const c     = storyContent(currentStory);
+    const t     = tr();
+    const c     = sc(currentStory);
     const total = c.questions.length;
     const pct   = score / total;
 
@@ -804,15 +900,16 @@
 
     const list = document.getElementById("results-list");
     list.innerHTML = "";
-    answers.forEach((a, i) => {
-      const q  = c.questions[i];
-      const li = document.createElement("li");
-      li.className = a.correct ? "ok" : "fail";
-      const mark = a.correct ? "✓" : "✗";
-      li.innerHTML = `<span class="q-label">${mark} ${q.question}</span>` +
-        (a.correct
-          ? `${t.yourAnswer} <strong>${q.options[a.chosen]}</strong>`
-          : `${t.yourAnswer} ${q.options[a.chosen]} — ${t.correctAnswer} <strong>${q.options[a.right]}</strong>`);
+    answers.forEach((ans, i) => {
+      const q       = c.questions[i];
+      const li      = document.createElement("li");
+      li.className  = ans.correct ? "ok" : "fail";
+      const yours   = escHTML(q.options[ans.chosen]);
+      const right   = escHTML(q.options[ans.right]);
+      li.innerHTML  = `<span class="q-label">${ans.correct ? "✓" : "✗"} ${escHTML(q.question)}</span>
+        ${ans.correct
+          ? `${t.yourAnswer} ${yours}`
+          : `${t.yourAnswer} ${yours} — ${t.correctAnswer} ${right}`}`;
       list.appendChild(li);
     });
   }
