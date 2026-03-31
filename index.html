@@ -579,6 +579,104 @@
     .fc-quiz-result-score { font-size: 17px; color: var(--muted); margin-bottom: 28px; }
     .fc-quiz-result-score span { color: var(--primary); font-weight: 700; }
 
+    /* ════ BEGINNER ROUTE ════ */
+    .bl-badge {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase;
+      background: #fff3c4; color: #8a6300;
+      border: 1.5px solid var(--keyword); border-radius: 99px;
+      padding: 3px 10px; margin-bottom: 10px;
+    }
+    [data-theme="dark"] .bl-badge { background: #2b2200; color: var(--keyword-chip); }
+
+    .bl-intro-icon  { font-size: 64px; text-align: center; margin-bottom: 20px; }
+    .bl-intro-title { font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 10px; }
+    .bl-intro-desc  { font-size: 15px; color: var(--muted); line-height: 1.7; margin-bottom: 24px; }
+    .bl-intro-words { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 28px; }
+    .bl-intro-word  {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 14px; background: var(--surface-alt);
+      border: 1.5px solid var(--border); border-radius: 10px;
+      font-size: 15px;
+    }
+    .bl-intro-word-nl { font-weight: 700; color: var(--text); }
+    .bl-intro-word-en { color: var(--muted); font-size: 13px; margin-left: 4px; }
+
+    .bl-step-bar {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 4px;
+    }
+    .bl-step-title { font-size: 24px; font-weight: 800; color: var(--text); margin-bottom: 24px; }
+
+    /* Learn card (reuses .flash-card but with audio placeholder) */
+    .bl-audio-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--border-light); border: 1.5px solid var(--border);
+      border-radius: 99px; padding: 7px 16px;
+      font-size: 13px; font-weight: 600; color: var(--muted);
+      cursor: default; margin-top: 14px; font-family: inherit;
+    }
+
+    /* Listen and tap — 2×2 grid */
+    .bl-listen-prompt {
+      text-align: center; margin-bottom: 22px;
+    }
+    .bl-listen-word {
+      font-size: 28px; font-weight: 800; color: var(--primary);
+      margin-bottom: 6px;
+    }
+    .bl-listen-hint { font-size: 13px; color: var(--muted); }
+    .bl-listen-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+      margin-bottom: 20px;
+    }
+    .bl-listen-opt {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 6px; padding: 20px 12px;
+      background: var(--surface-alt); border: 2px solid var(--border);
+      border-radius: 16px; cursor: pointer; font-family: inherit;
+      transition: border-color 0.15s, background 0.15s, transform 0.1s;
+      font-size: 13px; font-weight: 600; color: var(--muted);
+    }
+    .bl-listen-opt:hover:not(:disabled) { border-color: var(--primary); background: var(--primary-bg); transform: translateY(-1px); }
+    .bl-listen-opt:focus { outline: 2px solid var(--primary); outline-offset: 2px; }
+    .bl-listen-opt .bl-opt-emoji { font-size: 44px; line-height: 1; }
+    .bl-listen-opt.correct { background: var(--correct-bg); border-color: var(--correct); }
+    .bl-listen-opt.wrong   { background: var(--wrong-bg);   border-color: var(--wrong); }
+    .bl-listen-opt:disabled { cursor: default; transform: none; }
+
+    /* Sentences */
+    .bl-sentence-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 28px; }
+    .bl-sentence-card {
+      padding: 18px 20px; background: var(--surface-alt);
+      border: 1.5px solid var(--border); border-radius: 14px;
+    }
+    .bl-sentence-nl { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .bl-sentence-en { font-size: 14px; color: var(--muted); font-style: italic; }
+
+    /* Dialogue */
+    .bl-dialog-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 28px; }
+    .bl-dialog-line {
+      padding: 14px 18px; border-radius: 14px;
+      background: var(--surface-alt); border: 1.5px solid var(--border);
+    }
+    .bl-dialog-speaker { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 4px; }
+    .bl-dialog-nl { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .bl-dialog-en { font-size: 13px; color: var(--muted); font-style: italic; }
+
+    /* Review grid */
+    .bl-review-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+    .bl-review-row {
+      display: flex; align-items: center; gap: 16px;
+      padding: 12px 16px; background: var(--surface-alt);
+      border: 1.5px solid var(--border); border-radius: 12px;
+    }
+    .bl-review-emoji { font-size: 32px; flex-shrink: 0; }
+    .bl-review-img   { width: 42px; height: 42px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+    .bl-review-info  { flex: 1; }
+    .bl-review-nl    { font-size: 17px; font-weight: 700; color: var(--text); }
+    .bl-review-en    { font-size: 13px; color: var(--muted); }
+
     @media (max-width: 500px) {
       body { padding: 16px 12px; }
       .card { padding: 24px 20px; }
@@ -687,6 +785,13 @@
         <div>
           <div class="practice-select-name" id="ui-ps-fc">Word flashcards</div>
           <div class="practice-select-sub" id="ui-ps-fc-sub">Learn words with flip cards</div>
+        </div>
+      </button>
+      <button class="practice-select-btn" onclick="startBeginnerRoute()" style="border-color:var(--keyword);background:var(--keyword-bar-bg);">
+        <span class="practice-select-flag">🌱</span>
+        <div>
+          <div class="practice-select-name" id="ui-ps-bl">I know no Dutch yet</div>
+          <div class="practice-select-sub" id="ui-ps-bl-sub">Start from zero — beginner lessons</div>
         </div>
       </button>
     </div>
@@ -865,6 +970,25 @@
     </div>
   </div>
 
+
+  <!-- ════ SCREEN: BEGINNER THEMES ════ -->
+  <div id="screen-beginner-themes" class="screen">
+    <button class="back-link" onclick="showScreen('screen-practice-select')" id="ui-bl-themes-back">← Back</button>
+    <div class="fc-themes-header">
+      <span class="bl-badge">Pre-A1 · Dutch for beginners</span>
+      <h1 id="ui-bl-themes-title">Choose a lesson</h1>
+    </div>
+    <div class="fc-theme-list" id="bl-theme-list"></div>
+  </div>
+
+  <!-- ════ SCREEN: BEGINNER LESSON ════ -->
+  <div id="screen-beginner-lesson" class="screen">
+    <button class="back-link" id="ui-bl-back" onclick="showScreen('screen-beginner-themes')">← Lessons</button>
+    <p class="bl-step-bar"   id="bl-step-bar"></p>
+    <p class="bl-step-title" id="bl-step-title"></p>
+    <div id="bl-content"></div>
+  </div>
+
 </div><!-- .card -->
 
 <script>
@@ -981,6 +1105,32 @@
       fcQuizRetry:         "Try again",
       fcQuizThemes:        "← Choose theme",
       fcQuizScore:         (x, y) => `You got <span>${x} of ${y}</span> correct!`,
+      // Beginner route
+      blBtn:          "I know no Dutch yet",
+      blBtnSub:       "Start from zero — beginner lessons",
+      blThemesTitle:  "Choose a lesson",
+      blThemesBack:   "← Back",
+      blIntroBtn:     "Start lesson →",
+      blStepOf:       (s, t, n) => `Step ${s} of ${t} · ${n}`,
+      blLearnName:    "Learn words",
+      blListenName:   "Listen and tap",
+      blPictureName:  "Picture to word",
+      blSentName:     "Read sentences",
+      blDialogName:   "Mini-dialogue",
+      blReviewName:   "Review",
+      blNext:         "Next →",
+      blNextStep:     "Next step →",
+      blAgain:        "Practice again",
+      blFinish:       "← Choose another lesson",
+      blAudioNote:    "🔊 Audio coming soon",
+      blListenQ:      "Which picture shows this word?",
+      blPictureQ:     "Which word matches the picture?",
+      blDialogTitle:  "Read the dialogue",
+      blReviewTitle:  "Words from this lesson",
+      blCorrect:      "Correct!",
+      blWrong:        "Not quite — look at the right answer.",
+      blWordOf:       (x, y) => `Word ${x} of ${y}`,
+      blQOf:          (x, y) => `Question ${x} of ${y}`,
     },
     nl: {
       // Home
@@ -1066,8 +1216,99 @@
       fcQuizRetry:         "Opnieuw proberen",
       fcQuizThemes:        "← Kies thema",
       fcQuizScore:         (x, y) => `Je had <span>${x} van de ${y}</span> goed!`,
+      // Beginner route (NL UI)
+      blBtn:          "Ik ken nog geen Nederlands",
+      blBtnSub:       "Begin bij het begin — beginnerslessen",
+      blThemesTitle:  "Kies een les",
+      blThemesBack:   "← Terug",
+      blIntroBtn:     "Start les →",
+      blStepOf:       (s, t, n) => `Stap ${s} van ${t} · ${n}`,
+      blLearnName:    "Leer woorden",
+      blListenName:   "Luister en tik",
+      blPictureName:  "Afbeelding naar woord",
+      blSentName:     "Lees zinnen",
+      blDialogName:   "Mini-dialoog",
+      blReviewName:   "Herhaling",
+      blNext:         "Volgende →",
+      blNextStep:     "Volgende stap →",
+      blAgain:        "Opnieuw oefenen",
+      blFinish:       "← Kies een andere les",
+      blAudioNote:    "🔊 Audio komt binnenkort",
+      blListenQ:      "Welke afbeelding hoort bij dit woord?",
+      blPictureQ:     "Welk woord hoort bij deze afbeelding?",
+      blDialogTitle:  "Lees de dialoog",
+      blReviewTitle:  "Woorden uit deze les",
+      blCorrect:      "Correct!",
+      blWrong:        "Niet helemaal — kijk naar het juiste antwoord.",
+      blWordOf:       (x, y) => `Woord ${x} van ${y}`,
+      blQOf:          (x, y) => `Vraag ${x} van ${y}`,
     }
   };
+
+  // ══════════════════════════════════════════
+  //  BEGINNER ROUTE DATA (Pre-A1 / A0)
+  // ══════════════════════════════════════════
+  const beginnerThemes = [
+    {
+      id: "greetings",
+      emoji: "👋",
+      title:    { en: "Greetings",         nl: "Begroetingen" },
+      subtitle: { en: "5 essential phrases", nl: "5 essentiële uitdrukkingen" },
+      intro:    { en: "In this lesson you will learn 5 basic Dutch greetings. You will use these every day — when you arrive somewhere, say thank you, or say goodbye." },
+      words: [
+        { nl: "Hallo",        en: "Hello",          emoji: "👋",  image: null, audio: null },
+        { nl: "Goedemorgen",  en: "Good morning",   emoji: "🌅",  image: null, audio: null },
+        { nl: "Dank je",      en: "Thank you",      emoji: "🙏",  image: null, audio: null },
+        { nl: "Alsjeblieft",  en: "Please / Here you go", emoji: "🤲", image: null, audio: null },
+        { nl: "Tot ziens",    en: "Goodbye",        emoji: "👋🏼", image: null, audio: null },
+      ],
+      sentences: [
+        { nl: "Hallo!",       en: "Hello!" },
+        { nl: "Dank je.",     en: "Thank you." },
+        { nl: "Tot ziens!",   en: "Goodbye!" },
+      ],
+      dialogue: {
+        context: { en: "A first meeting" },
+        lines: [
+          { speaker: "Anna", nl: "Hallo! Ik ben Anna.",         en: "Hello! I am Anna." },
+          { speaker: "Max",  nl: "Hallo! Ik ben Max.",          en: "Hello! I am Max." },
+          { speaker: "Anna", nl: "Goedemorgen, Max.",           en: "Good morning, Max." },
+          { speaker: "Max",  nl: "Goedemorgen! Alsjeblieft.",   en: "Good morning! Here you go." },
+          { speaker: "Anna", nl: "Dank je! Tot ziens.",         en: "Thank you! Goodbye." },
+          { speaker: "Max",  nl: "Tot ziens!",                  en: "Goodbye!" },
+        ]
+      }
+    },
+    {
+      id: "supermarket-basics",
+      emoji: "🛒",
+      title:    { en: "Supermarket basics",     nl: "Supermarkt basics" },
+      subtitle: { en: "5 essential words",       nl: "5 essentiële woorden" },
+      intro:    { en: "In this lesson you will learn 5 simple words you need in a Dutch supermarket. These are the most common things you will see and say when you go shopping." },
+      words: [
+        { nl: "brood",   en: "bread",            emoji: "🍞",  image: null, audio: null },
+        { nl: "water",   en: "water",            emoji: "💧",  image: null, audio: null },
+        { nl: "melk",    en: "milk",             emoji: "🥛",  image: null, audio: null },
+        { nl: "kassa",   en: "checkout / till",  emoji: "💳",  image: null, audio: null },
+        { nl: "tas",     en: "bag",              emoji: "👜",  image: null, audio: null },
+      ],
+      sentences: [
+        { nl: "Ik koop brood.",       en: "I buy bread." },
+        { nl: "Waar is de kassa?",    en: "Where is the checkout?" },
+      ],
+      dialogue: {
+        context: { en: "At the supermarket" },
+        lines: [
+          { speaker: "Customer", nl: "Hallo! Waar is het brood?",      en: "Hello! Where is the bread?" },
+          { speaker: "Staff",    nl: "Hier. Het brood is hier.",        en: "Here. The bread is here." },
+          { speaker: "Customer", nl: "Dank je! Waar is de kassa?",     en: "Thank you! Where is the checkout?" },
+          { speaker: "Staff",    nl: "De kassa is daar.",               en: "The checkout is there." },
+          { speaker: "Customer", nl: "Dank je. Tot ziens!",             en: "Thank you. Goodbye!" },
+          { speaker: "Staff",    nl: "Tot ziens!",                      en: "Goodbye!" },
+        ]
+      }
+    }
+  ];
 
   // ══════════════════════════════════════════
   //  STANDALONE FLASHCARD DATA
@@ -1279,6 +1520,17 @@
   // Practice step
   let practiceItems   = [];
   let practiceIdx     = 0;
+  // Beginner route
+  let blTheme         = null;
+  let blStep          = 0;      // 0=intro 1=learn 2=listen 3=picture 4=sentences 5=dialogue 6=review
+  let blWordIdx       = 0;
+  let blListenItems   = [];
+  let blListenIdx     = 0;
+  let blListenScore   = 0;
+  let blPicItems      = [];
+  let blPicIdx        = 0;
+  let blPicScore      = 0;
+  const BL_STEPS      = 6;     // total numbered steps (intro is not counted)
   // Standalone flashcards
   let fcCurrentSet    = null;
   let fcCards         = [];
@@ -1405,7 +1657,8 @@
   const HIDE_INDICATOR_ON = new Set([
     "screen-home", "screen-ui-lang", "screen-learn-lang",
     "screen-practice-select", "screen-about",
-    "screen-flashcard-themes", "screen-flashcard-learn", "screen-flashcard-quiz"
+    "screen-flashcard-themes", "screen-flashcard-learn", "screen-flashcard-quiz",
+    "screen-beginner-themes", "screen-beginner-lesson"
   ]);
 
   function showScreen(id) {
@@ -1416,6 +1669,7 @@
     document.getElementById("lang-indicator").classList.toggle("hidden", HIDE_INDICATOR_ON.has(id));
     if (id === "screen-select") buildSelectionCards();
     if (id === "screen-flashcard-themes") buildFlashcardThemes();
+    if (id === "screen-beginner-themes") buildBeginnerThemeList();
   }
 
   // ══════════════════════════════════════════
@@ -1994,6 +2248,343 @@
 
   function retryFlashcardQuiz() {
     buildFlashcardQuiz();
+  }
+
+  // ══════════════════════════════════════════
+  //  BEGINNER ROUTE
+  // ══════════════════════════════════════════
+  function startBeginnerRoute() {
+    interfaceLang = "en";
+    learningLang  = "nl";
+    document.documentElement.setAttribute("lang", "en");
+    applyTranslations();
+    showScreen("screen-beginner-themes");
+  }
+
+  function buildBeginnerThemeList() {
+    const list = document.getElementById("bl-theme-list");
+    list.innerHTML = "";
+    beginnerThemes.forEach(theme => {
+      const btn = document.createElement("button");
+      btn.className = "fc-theme-card";
+      btn.onclick = () => openBeginnerTheme(theme.id);
+      btn.innerHTML = `
+        <div class="fc-theme-icon">${theme.emoji}</div>
+        <div class="fc-theme-info">
+          <h2>${escHTML(theme.title.en)}</h2>
+          <p>${escHTML(theme.subtitle.en)}</p>
+        </div>`;
+      list.appendChild(btn);
+    });
+  }
+
+  function openBeginnerTheme(id) {
+    blTheme = beginnerThemes.find(t => t.id === id);
+    if (!blTheme) return;
+    blStep = 0; blWordIdx = 0;
+    blListenItems = []; blListenIdx = 0; blListenScore = 0;
+    blPicItems    = []; blPicIdx    = 0; blPicScore    = 0;
+    renderBlStep();
+    showScreen("screen-beginner-lesson");
+  }
+
+  function renderBlStep() {
+    const stepRenders = [
+      renderBlIntro, renderBlLearnWords, renderBlListen,
+      renderBlPicture, renderBlSentences, renderBlDialogue, renderBlReview
+    ];
+    if (blStep < stepRenders.length) stepRenders[blStep]();
+  }
+
+  function blSetHeader(stepNum, stepName) {
+    // stepNum: 0 = no step number (intro); 1-6 = numbered steps
+    const bar   = document.getElementById("bl-step-bar");
+    const title = document.getElementById("bl-step-title");
+    if (stepNum === 0) {
+      bar.textContent   = "About this lesson";
+      title.textContent = blTheme.title.en;
+    } else {
+      bar.textContent   = `Step ${stepNum} of ${BL_STEPS} · ${stepName}`;
+      title.textContent = stepName;
+    }
+  }
+
+  function blVisual(word) {
+    if (word.image) return `<img src="${escHTML(word.image)}" alt="${escHTML(word.nl)}" class="flash-img">`;
+    return `<span style="font-size:72px;line-height:1;display:block;margin-bottom:18px">${word.emoji || "📖"}</span>`;
+  }
+
+  // ── STEP 0: INTRO ──────────────────────────
+  function renderBlIntro() {
+    blSetHeader(0, "");
+    document.getElementById("bl-step-bar").textContent = "Pre-A1 · Dutch for beginners";
+    document.getElementById("bl-step-title").textContent = "";
+
+    const wordList = blTheme.words.map(w =>
+      `<li class="bl-intro-word">
+        <span style="font-size:28px;line-height:1">${w.emoji || "📖"}</span>
+        <span class="bl-intro-word-nl">${escHTML(w.nl)}</span>
+        <span class="bl-intro-word-en">— ${escHTML(w.en)}</span>
+      </li>`
+    ).join("");
+
+    document.getElementById("bl-content").innerHTML = `
+      <div class="bl-intro-icon">${blTheme.emoji}</div>
+      <span class="bl-badge">Pre-A1 · Dutch for beginners</span>
+      <h2 class="bl-intro-title">${escHTML(blTheme.title.en)}</h2>
+      <p class="bl-intro-desc">${escHTML(blTheme.intro.en)}</p>
+      <p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-bottom:10px">You will learn:</p>
+      <ul class="bl-intro-words">${wordList}</ul>
+      <button class="btn-primary" onclick="blNext()">Start lesson →</button>`;
+  }
+
+  // ── STEP 1: LEARN WORDS ───────────────────
+  function renderBlLearnWords() {
+    blSetHeader(1, "Learn words");
+    const w     = blTheme.words[blWordIdx];
+    const total = blTheme.words.length;
+    const isLast = blWordIdx === total - 1;
+
+    document.getElementById("bl-content").innerHTML = `
+      <p style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">
+        Word ${blWordIdx + 1} of ${total}
+      </p>
+      <div class="flash-card" style="text-align:center">
+        <div style="margin-bottom:18px">${blVisual(w)}</div>
+        <div class="flash-card-word">${escHTML(w.nl)}</div>
+        <div class="flash-card-trans">${escHTML(w.en)}</div>
+        <button class="bl-audio-btn" disabled aria-label="Audio not yet available">
+          🔊 Audio coming soon
+        </button>
+      </div>
+      <button class="btn-primary" onclick="blLearnNext()">
+        ${isLast ? "Next step →" : "Next word →"}
+      </button>`;
+  }
+
+  function blLearnNext() {
+    blWordIdx++;
+    if (blWordIdx < blTheme.words.length) {
+      renderBlLearnWords();
+    } else {
+      // Prepare listen items (shuffled)
+      blListenItems = [...blTheme.words].sort(() => Math.random() - 0.5);
+      blListenIdx   = 0;
+      blListenScore = 0;
+      blNext();
+    }
+  }
+
+  // ── STEP 2: LISTEN AND TAP ────────────────
+  function renderBlListen() {
+    blSetHeader(2, "Listen and tap");
+    if (blListenItems.length === 0) {
+      blListenItems = [...blTheme.words].sort(() => Math.random() - 0.5);
+    }
+    showBlListenItem();
+  }
+
+  function showBlListenItem() {
+    const target = blListenItems[blListenIdx];
+    const total  = blListenItems.length;
+
+    // 4 options: target + 3 random distractors from same theme
+    const others = blTheme.words
+      .filter(w => w.nl !== target.nl)
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 3);
+    const opts = [target, ...others].sort(() => Math.random() - 0.5);
+
+    const optBtns = opts.map(o => `
+      <button class="bl-listen-opt" onclick="blSelectListen(this, ${JSON.stringify(o.nl === target.nl)}, '${escHTML(target.nl)}')">
+        <span class="bl-opt-emoji">${o.image ? `<img src="${escHTML(o.image)}" alt="" style="width:44px;height:44px;object-fit:cover;border-radius:8px">` : o.emoji || "❓"}</span>
+        <span>${escHTML(o.nl)}</span>
+      </button>`).join("");
+
+    document.getElementById("bl-content").innerHTML = `
+      <p style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:16px">
+        Question ${blListenIdx + 1} of ${total}
+      </p>
+      <div class="bl-listen-prompt">
+        <div class="bl-listen-word">${escHTML(target.nl)}</div>
+        <div class="bl-listen-hint">🔊 Audio coming soon · tap the correct picture</div>
+      </div>
+      <div class="bl-listen-grid">${optBtns}</div>
+      <div class="feedback-box" id="bl-listen-fb"><div class="feedback-verdict" id="bl-listen-verdict"></div></div>
+      <button class="btn-primary" id="bl-listen-next" style="display:none" onclick="blListenNext()">
+        ${blListenIdx === total - 1 ? "Next step →" : "Next →"}
+      </button>`;
+  }
+
+  function blSelectListen(btn, isRight, correctNl) {
+    document.querySelectorAll(".bl-listen-opt").forEach(b => {
+      b.disabled = true;
+      if (b === btn) b.classList.add(isRight ? "correct" : "wrong");
+    });
+    if (!isRight) {
+      document.querySelectorAll(".bl-listen-opt").forEach(b => {
+        if (b.querySelector("span:last-child") && b.querySelector("span:last-child").textContent === correctNl)
+          b.classList.add("correct");
+      });
+    }
+    if (isRight) blListenScore++;
+    const fb = document.getElementById("bl-listen-fb");
+    fb.className = "feedback-box " + (isRight ? "correct" : "wrong");
+    document.getElementById("bl-listen-verdict").textContent = isRight ? "Correct!" : "Not quite — look at the right answer.";
+    document.getElementById("bl-listen-next").style.display = "block";
+  }
+
+  function blListenNext() {
+    blListenIdx++;
+    if (blListenIdx < blListenItems.length) {
+      showBlListenItem();
+    } else {
+      blPicItems = [...blTheme.words].sort(() => Math.random() - 0.5);
+      blPicIdx   = 0;
+      blPicScore = 0;
+      blNext();
+    }
+  }
+
+  // ── STEP 3: PICTURE TO WORD ───────────────
+  function renderBlPicture() {
+    blSetHeader(3, "Picture to word");
+    if (blPicItems.length === 0) {
+      blPicItems = [...blTheme.words].sort(() => Math.random() - 0.5);
+    }
+    showBlPicItem();
+  }
+
+  function showBlPicItem() {
+    const target = blPicItems[blPicIdx];
+    const total  = blPicItems.length;
+
+    const distractors = blTheme.words
+      .filter(w => w.nl !== target.nl)
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 2);
+    const opts = [target, ...distractors].sort(() => Math.random() - 0.5);
+
+    const optBtns = opts.map(o => `
+      <button class="practice-option" onclick="blSelectPic(this, ${JSON.stringify(o.nl === target.nl)}, '${escHTML(target.nl)}')">
+        ${escHTML(o.nl)}
+      </button>`).join("");
+
+    document.getElementById("bl-content").innerHTML = `
+      <p style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:16px">
+        Question ${blPicIdx + 1} of ${total}
+      </p>
+      <div style="text-align:center;margin-bottom:20px">
+        ${target.image
+          ? `<img src="${escHTML(target.image)}" alt="" class="flash-img" style="margin:0 auto">`
+          : `<span style="font-size:80px;line-height:1;display:block">${target.emoji || "❓"}</span>`}
+      </div>
+      <p style="font-size:14px;color:var(--muted);text-align:center;margin-bottom:16px">Which word matches the picture?</p>
+      <div class="practice-options">${optBtns}</div>
+      <div class="feedback-box" id="bl-pic-fb"><div class="feedback-verdict" id="bl-pic-verdict"></div></div>
+      <button class="btn-primary" id="bl-pic-next" style="display:none" onclick="blPicNext()">
+        ${blPicIdx === total - 1 ? "Next step →" : "Next →"}
+      </button>`;
+  }
+
+  function blSelectPic(btn, isRight, correctNl) {
+    document.querySelectorAll(".practice-option").forEach(b => {
+      b.disabled = true;
+      if (b === btn) b.classList.add(isRight ? "correct" : "wrong");
+    });
+    if (!isRight) {
+      document.querySelectorAll(".practice-option").forEach(b => {
+        if (b.textContent.trim() === correctNl) b.classList.add("correct");
+      });
+    }
+    if (isRight) blPicScore++;
+    const fb = document.getElementById("bl-pic-fb");
+    fb.className = "feedback-box " + (isRight ? "correct" : "wrong");
+    document.getElementById("bl-pic-verdict").textContent = isRight ? "Correct!" : "Not quite — look at the right answer.";
+    document.getElementById("bl-pic-next").style.display = "block";
+  }
+
+  function blPicNext() {
+    blPicIdx++;
+    if (blPicIdx < blPicItems.length) {
+      showBlPicItem();
+    } else {
+      blNext();
+    }
+  }
+
+  // ── STEP 4: MICRO-SENTENCES ───────────────
+  function renderBlSentences() {
+    blSetHeader(4, "Read sentences");
+    const items = blTheme.sentences.map(s => `
+      <div class="bl-sentence-card">
+        <div class="bl-sentence-nl">${escHTML(s.nl)}</div>
+        <div class="bl-sentence-en">${escHTML(s.en)}</div>
+      </div>`).join("");
+
+    document.getElementById("bl-content").innerHTML = `
+      <div class="bl-sentence-list">${items}</div>
+      <button class="btn-primary" onclick="blNext()">Next step →</button>`;
+  }
+
+  // ── STEP 5: MINI-DIALOGUE ─────────────────
+  function renderBlDialogue() {
+    blSetHeader(5, "Mini-dialogue");
+    const d = blTheme.dialogue;
+    const lines = d.lines.map(line => `
+      <div class="bl-dialog-line">
+        <div class="bl-dialog-speaker">${escHTML(line.speaker)}</div>
+        <div class="bl-dialog-nl">${escHTML(line.nl)}</div>
+        <div class="bl-dialog-en">${escHTML(line.en)}</div>
+      </div>`).join("");
+
+    document.getElementById("bl-content").innerHTML = `
+      <p style="font-size:13px;color:var(--muted);margin-bottom:16px;font-style:italic">
+        ${escHTML(d.context.en)}
+      </p>
+      <div class="bl-dialog-list">${lines}</div>
+      <button class="btn-primary" onclick="blNext()">Next step →</button>`;
+  }
+
+  // ── STEP 6: REVIEW ────────────────────────
+  function renderBlReview() {
+    blSetHeader(6, "Review");
+    const rows = blTheme.words.map(w => `
+      <div class="bl-review-row">
+        ${w.image
+          ? `<img src="${escHTML(w.image)}" alt="${escHTML(w.nl)}" class="bl-review-img">`
+          : `<span class="bl-review-emoji">${w.emoji || "📖"}</span>`}
+        <div class="bl-review-info">
+          <div class="bl-review-nl">${escHTML(w.nl)}</div>
+          <div class="bl-review-en">${escHTML(w.en)}</div>
+        </div>
+      </div>`).join("");
+
+    document.getElementById("bl-content").innerHTML = `
+      <p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-bottom:14px">
+        Words from this lesson
+      </p>
+      <div class="bl-review-list">${rows}</div>
+      <button class="btn-primary" onclick="blRestartLesson()">Practice again</button>
+      <button class="btn-secondary" onclick="showScreen('screen-beginner-themes')">← Choose another lesson</button>`;
+  }
+
+  // ── NAVIGATION ────────────────────────────
+  function blNext() {
+    blStep++;
+    renderBlStep();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function blRestartLesson() {
+    blWordIdx     = 0;
+    blListenItems = [...blTheme.words].sort(() => Math.random() - 0.5);
+    blListenIdx   = 0; blListenScore = 0;
+    blPicItems    = [...blTheme.words].sort(() => Math.random() - 0.5);
+    blPicIdx      = 0; blPicScore    = 0;
+    blStep        = 1;   // skip intro, go straight to learn
+    renderBlStep();
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 </script>
 </body>
