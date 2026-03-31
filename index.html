@@ -5,20 +5,86 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Language Learning App</title>
   <style>
+    /* ════════════════════════════════════════
+       THEME — CSS CUSTOM PROPERTIES
+    ════════════════════════════════════════ */
+    :root {
+      --bg:              #f0f4ff;
+      --surface:         #ffffff;
+      --surface-alt:     #f7f9ff;
+      --primary:         #4f74e3;
+      --primary-dark:    #3a5fc9;
+      --primary-bg:      #eef2ff;
+      --primary-border:  #c5d0f5;
+      --text:            #1a1f36;
+      --text-body:       #333333;
+      --muted:           #7c8db0;
+      --muted-light:     #b0bcd4;
+      --border:          #dce3f5;
+      --border-light:    #e8ecf5;
+      --correct:         #27ae60;
+      --correct-text:    #1e8449;
+      --correct-bg:      #eafaf1;
+      --correct-border:  #a3e6c0;
+      --wrong:           #e74c3c;
+      --wrong-text:      #c0392b;
+      --wrong-bg:        #fff0f0;
+      --wrong-border:    #f5c0c0;
+      --keyword:         #f5d060;
+      --keyword-bg:      #fff3c4;
+      --keyword-bar-bg:  #fffbf0;
+      --keyword-bar-bd:  #fde8a0;
+      --keyword-text:    #b48a00;
+      --keyword-chip:    #8a6300;
+    }
+    [data-theme="dark"] {
+      --bg:              #0f1120;
+      --surface:         #1a1f36;
+      --surface-alt:     #1e2545;
+      --primary:         #7b97f5;
+      --primary-dark:    #5a77e3;
+      --primary-bg:      #1a2563;
+      --primary-border:  #2a3870;
+      --text:            #e8ecf9;
+      --text-body:       #c8d0e8;
+      --muted:           #8b9dc0;
+      --muted-light:     #4a5580;
+      --border:          #2a3356;
+      --border-light:    #252d50;
+      --correct:         #2ecc71;
+      --correct-text:    #2ecc71;
+      --correct-bg:      #0d2b1a;
+      --correct-border:  #1a5a30;
+      --wrong:           #e74c3c;
+      --wrong-text:      #ff6b6b;
+      --wrong-bg:        #2b0d0d;
+      --wrong-border:    #5a1a1a;
+      --keyword:         #d4a017;
+      --keyword-bg:      #2b2200;
+      --keyword-bar-bg:  #1e1a00;
+      --keyword-bar-bd:  #3a3000;
+      --keyword-text:    #d4a017;
+      --keyword-chip:    #e6be40;
+    }
+
+    /* ════════════════════════════════════════
+       BASE
+    ════════════════════════════════════════ */
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f0f4ff;
+      background: var(--bg);
       min-height: 100vh;
       display: flex;
       align-items: flex-start;
       justify-content: center;
       padding: 30px 20px;
+      transition: background 0.2s, color 0.2s;
     }
 
     .card {
-      background: white;
+      background: var(--surface);
       border-radius: 20px;
       padding: 36px 40px;
       max-width: 640px;
@@ -26,132 +92,190 @@
       box-shadow: 0 8px 30px rgba(0,0,0,0.10);
       position: relative;
     }
+    [data-theme="dark"] .card { box-shadow: 0 8px 30px rgba(0,0,0,0.50); }
 
     .screen { display: none; }
     .screen.active { display: block; }
 
-    /* ── LANG INDICATOR (top right) ── */
-    .lang-indicator {
+    /* ════ CARD TOPBAR (lang indicator + theme toggle) ════ */
+    .card-topbar {
       position: absolute;
-      top: 16px; right: 16px;
+      top: 14px; right: 14px;
+      z-index: 10;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .lang-indicator {
       display: flex; align-items: center; gap: 6px;
-      background: #eef2ff;
-      color: #4f74e3;
-      border: 1.5px solid #c5d0f5;
+      background: var(--primary-bg);
+      color: var(--primary);
+      border: 1.5px solid var(--primary-border);
       border-radius: 99px;
       padding: 5px 12px;
       font-size: 12px; font-weight: 700;
-      cursor: pointer; z-index: 10;
+      cursor: pointer;
       transition: background 0.15s;
+      font-family: inherit;
     }
-    .lang-indicator:hover { background: #dce3f5; }
-    .lang-indicator:focus { outline: 2px solid #4f74e3; outline-offset: 2px; }
+    .lang-indicator:hover { background: var(--border); }
+    .lang-indicator:focus { outline: 2px solid var(--primary); outline-offset: 2px; }
     .lang-indicator.hidden { display: none; }
 
-    /* ── BACK LINK ── */
+    .theme-toggle-btn {
+      background: var(--surface-alt);
+      border: 1.5px solid var(--border);
+      border-radius: 50%;
+      width: 34px; height: 34px;
+      font-size: 16px; line-height: 1;
+      cursor: pointer; font-family: inherit;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s;
+      flex-shrink: 0;
+    }
+    .theme-toggle-btn:hover { background: var(--border); }
+    .theme-toggle-btn:focus { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+    /* ════ BACK LINK ════ */
     .back-link {
       display: inline-flex; align-items: center; gap: 6px;
-      font-size: 13px; font-weight: 700; color: #7c8db0;
+      font-size: 13px; font-weight: 700; color: var(--muted);
       cursor: pointer; margin-bottom: 24px;
       border: none; background: none; padding: 0;
+      font-family: inherit;
     }
-    .back-link:hover { color: #4f74e3; }
-    .back-link:focus { outline: 2px solid #4f74e3; border-radius: 4px; }
+    .back-link:hover { color: var(--primary); }
+    .back-link:focus { outline: 2px solid var(--primary); border-radius: 4px; }
 
     /* ════ LANGUAGE SELECTION SCREENS ════ */
     .lang-screen-header {
       text-align: center; margin-bottom: 36px; padding-top: 8px;
     }
     .lang-screen-header h1 {
-      font-size: 24px; font-weight: 800; color: #1a1f36; margin-bottom: 10px;
+      font-size: 24px; font-weight: 800; color: var(--text); margin-bottom: 10px;
     }
-    .lang-screen-header p { font-size: 15px; color: #7c8db0; line-height: 1.6; }
+    .lang-screen-header p { font-size: 15px; color: var(--muted); line-height: 1.6; }
 
     .lang-options { display: flex; gap: 16px; }
 
     .lang-option-btn {
       flex: 1; display: flex; flex-direction: column;
       align-items: center; gap: 10px;
-      border: 2px solid #dce3f5; border-radius: 16px;
-      padding: 28px 16px; background: #f7f9ff; cursor: pointer;
+      border: 2px solid var(--border); border-radius: 16px;
+      padding: 28px 16px; background: var(--surface-alt); cursor: pointer;
       transition: border-color 0.15s, background 0.15s, transform 0.1s;
       font-family: inherit;
     }
-    .lang-option-btn:hover { border-color: #4f74e3; background: #eef2ff; transform: translateY(-2px); }
-    .lang-option-btn:focus { outline: 2px solid #4f74e3; outline-offset: 2px; }
+    .lang-option-btn:hover { border-color: var(--primary); background: var(--primary-bg); transform: translateY(-2px); }
+    .lang-option-btn:focus { outline: 2px solid var(--primary); outline-offset: 2px; }
     .lang-flag { font-size: 44px; line-height: 1; }
-    .lang-name { font-size: 17px; font-weight: 800; color: #1a1f36; }
-    .lang-native { font-size: 13px; color: #7c8db0; }
+    .lang-name { font-size: 17px; font-weight: 800; color: var(--text); }
+    .lang-native { font-size: 13px; color: var(--muted); }
+
+    /* ════ HOME SCREEN ════ */
+    .home-wrapper { text-align: center; padding: 48px 0 32px; }
+    .home-app-icon { font-size: 64px; line-height: 1; margin-bottom: 22px; }
+    .home-title { font-size: 30px; font-weight: 800; color: var(--text); margin-bottom: 10px; }
+    .home-subtitle { font-size: 15px; color: var(--muted); line-height: 1.6; margin-bottom: 40px; }
+    .home-actions { display: flex; flex-direction: column; gap: 12px; }
+
+    /* ════ PRACTICE SELECT ════ */
+    .practice-select-header { margin-bottom: 28px; padding-top: 8px; }
+    .practice-select-header h1 { font-size: 22px; font-weight: 800; color: var(--text); }
+
+    .practice-option-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .practice-select-btn {
+      display: flex; align-items: center; gap: 16px;
+      border: 2px solid var(--border); border-radius: 16px;
+      padding: 18px 20px; background: var(--surface-alt); cursor: pointer;
+      transition: border-color 0.15s, background 0.15s, transform 0.1s;
+      font-family: inherit; text-align: left; width: 100%;
+    }
+    .practice-select-btn:hover { border-color: var(--primary); background: var(--primary-bg); transform: translateY(-2px); }
+    .practice-select-btn:focus { outline: 2px solid var(--primary); outline-offset: 2px; }
+    .practice-select-flag { font-size: 36px; line-height: 1; flex-shrink: 0; }
+    .practice-select-name { font-size: 17px; font-weight: 800; color: var(--text); }
+    .practice-select-sub  { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+    /* ════ ABOUT SCREEN ════ */
+    .about-header { margin-bottom: 28px; }
+    .about-header h1 { font-size: 22px; font-weight: 800; color: var(--text); }
+    .about-section { margin-bottom: 22px; padding: 18px 20px; background: var(--surface-alt); border: 1.5px solid var(--border); border-radius: 14px; }
+    .about-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); margin-bottom: 6px; }
+    .about-value { font-size: 16px; color: var(--text); font-weight: 600; line-height: 1.5; }
+    .about-link { color: var(--primary); text-decoration: none; font-weight: 700; }
+    .about-link:hover { text-decoration: underline; }
+    .about-link:focus { outline: 2px solid var(--primary); border-radius: 2px; }
 
     /* ════ STORY SELECTION ════ */
     .select-header { margin-bottom: 28px; }
     .select-header .label-sm {
       font-size: 12px; font-weight: 700;
       letter-spacing: 1.5px; text-transform: uppercase;
-      color: #7c8db0; margin-bottom: 6px;
+      color: var(--muted); margin-bottom: 6px;
     }
-    .select-header h1 { font-size: 26px; font-weight: 800; color: #1a1f36; }
+    .select-header h1 { font-size: 26px; font-weight: 800; color: var(--text); }
 
     .story-cards { display: flex; flex-direction: column; gap: 16px; }
 
     .story-card {
       display: flex; align-items: center; gap: 18px;
-      border: 2px solid #dce3f5; border-radius: 16px;
+      border: 2px solid var(--border); border-radius: 16px;
       padding: 18px 20px; cursor: pointer;
       transition: border-color 0.15s, background 0.15s, transform 0.1s;
-      background: #f7f9ff; width: 100%; text-align: left;
+      background: var(--surface-alt); width: 100%; text-align: left;
       font-family: inherit;
     }
-    .story-card:hover { border-color: #4f74e3; background: #eef2ff; transform: translateY(-2px); }
-    .story-card:focus { outline: 2px solid #4f74e3; outline-offset: 2px; }
+    .story-card:hover { border-color: var(--primary); background: var(--primary-bg); transform: translateY(-2px); }
+    .story-card:focus { outline: 2px solid var(--primary); outline-offset: 2px; }
     .story-card-emoji { font-size: 38px; line-height: 1; flex-shrink: 0; }
     .story-card-info { flex: 1; }
-    .story-card-info h2 { font-size: 17px; font-weight: 800; color: #1a1f36; margin-bottom: 4px; }
-    .story-card-info p  { font-size: 13px; color: #7c8db0; line-height: 1.5; }
+    .story-card-info h2 { font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+    .story-card-info p  { font-size: 13px; color: var(--muted); line-height: 1.5; }
     .story-card-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
     .tag {
       font-size: 11px; font-weight: 700;
       letter-spacing: 0.8px; text-transform: uppercase;
-      background: #e8ecf5; color: #4f74e3;
+      background: var(--border-light); color: var(--primary);
       border-radius: 99px; padding: 4px 10px;
     }
-    .tag.done { background: #eafaf1; color: #27ae60; }
+    .tag.done { background: var(--correct-bg); color: var(--correct); }
     .difficulty { display: flex; gap: 3px; }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: #dce3f5; }
-    .dot.filled { background: #4f74e3; }
-    .arrow-icon { font-size: 20px; color: #b0bcd4; flex-shrink: 0; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
+    .dot.filled { background: var(--primary); }
+    .arrow-icon { font-size: 20px; color: var(--muted-light); flex-shrink: 0; }
 
     /* ════ STORY READING ════ */
     .story-label {
       font-size: 12px; font-weight: 700;
       letter-spacing: 1.5px; text-transform: uppercase;
-      color: #7c8db0; margin-bottom: 6px;
+      color: var(--muted); margin-bottom: 6px;
     }
-    .story-title { font-size: 26px; font-weight: 800; color: #1a1f36; margin-bottom: 20px; }
+    .story-title { font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 20px; }
 
     .keywords-bar {
       display: flex; flex-wrap: wrap; gap: 8px;
       margin-bottom: 20px; padding: 14px 16px;
-      background: #fffbf0; border: 1.5px solid #fde8a0;
+      background: var(--keyword-bar-bg); border: 1.5px solid var(--keyword-bar-bd);
       border-radius: 10px; align-items: center;
     }
     .keywords-bar.hidden { display: none; }
     .keywords-bar-label {
-      font-size: 12px; font-weight: 700; color: #b48a00;
+      font-size: 12px; font-weight: 700; color: var(--keyword-text);
       margin-right: 4px; white-space: nowrap;
     }
     .keyword-chip {
-      font-size: 13px; background: #fff3c4; color: #8a6300;
+      font-size: 13px; background: var(--keyword-bg); color: var(--keyword-chip);
       border-radius: 99px; padding: 3px 10px; cursor: pointer;
-      border: 1.5px solid #f5d060; font-weight: 600;
+      border: 1.5px solid var(--keyword); font-weight: 600;
       transition: background 0.1s; font-family: inherit;
     }
-    .keyword-chip:hover { background: #f5d060; }
-    .keyword-chip:focus { outline: 2px solid #b48a00; }
+    .keyword-chip:hover { background: var(--keyword); }
+    .keyword-chip:focus { outline: 2px solid var(--keyword-text); }
 
     .story-text {
-      font-size: 17px; line-height: 1.9; color: #333;
-      background: #f7f9ff; border-left: 4px solid #4f74e3;
+      font-size: 17px; line-height: 1.9; color: var(--text-body);
+      background: var(--surface-alt); border-left: 4px solid var(--primary);
       border-radius: 10px; padding: 22px 24px; margin-bottom: 28px;
     }
     .story-text p { margin-bottom: 14px; }
@@ -159,59 +283,60 @@
 
     .keyword-btn {
       background: none; border: none;
-      border-bottom: 2px solid #f5d060;
+      border-bottom: 2px solid var(--keyword);
       cursor: pointer; padding: 0 1px;
       font-size: inherit; font-family: inherit; line-height: inherit;
-      font-weight: 600; color: #7a5500;
+      font-weight: 600; color: var(--keyword-chip);
       transition: background 0.1s;
     }
-    .keyword-btn:hover { background: #fff3c4; border-radius: 3px; }
-    .keyword-btn:focus { outline: 2px solid #b48a00; border-radius: 3px; outline-offset: 1px; }
+    .keyword-btn:hover { background: var(--keyword-bg); border-radius: 3px; }
+    .keyword-btn:focus { outline: 2px solid var(--keyword-text); border-radius: 3px; outline-offset: 1px; }
 
     /* ── WORD POPUP ── */
     .word-popup {
       position: absolute;
-      background: white; border: 2px solid #4f74e3;
+      background: var(--surface); border: 2px solid var(--primary);
       border-radius: 14px; padding: 16px 18px;
       max-width: 280px; z-index: 100;
       box-shadow: 0 8px 24px rgba(0,0,0,0.15);
     }
+    [data-theme="dark"] .word-popup { box-shadow: 0 8px 24px rgba(0,0,0,0.50); }
     .word-popup.hidden { display: none; }
     .popup-header {
       display: flex; justify-content: space-between;
       align-items: flex-start; margin-bottom: 8px;
     }
-    .popup-word { font-size: 20px; font-weight: 800; color: #1a1f36; }
+    .popup-word { font-size: 20px; font-weight: 800; color: var(--text); }
     .popup-close {
       background: none; border: none; font-size: 20px;
-      color: #b0bcd4; cursor: pointer; padding: 0; line-height: 1;
+      color: var(--muted-light); cursor: pointer; padding: 0; line-height: 1;
     }
-    .popup-close:hover { color: #1a1f36; }
-    .popup-translation { font-size: 16px; font-weight: 700; color: #4f74e3; margin-bottom: 8px; }
+    .popup-close:hover { color: var(--text); }
+    .popup-translation { font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
     .popup-example-label {
-      font-size: 11px; font-weight: 700; color: #b0bcd4;
+      font-size: 11px; font-weight: 700; color: var(--muted-light);
       text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 3px;
     }
-    .popup-example { font-size: 13px; color: #7c8db0; font-style: italic; line-height: 1.5; }
+    .popup-example { font-size: 13px; color: var(--muted); font-style: italic; line-height: 1.5; }
 
     /* ════ QUESTIONS ════ */
     .progress-bar-wrap {
-      background: #e8ecf5; border-radius: 99px;
+      background: var(--border-light); border-radius: 99px;
       height: 8px; margin-bottom: 10px; overflow: hidden;
     }
     .progress-bar-fill {
-      background: #4f74e3; height: 100%;
+      background: var(--primary); height: 100%;
       border-radius: 99px; transition: width 0.4s ease;
     }
-    .progress-label { font-size: 13px; color: #7c8db0; margin-bottom: 20px; text-align: right; }
+    .progress-label { font-size: 13px; color: var(--muted); margin-bottom: 20px; text-align: right; }
 
     details.story-mini {
-      font-size: 14px; color: #555; background: #f7f9ff;
-      border-left: 3px solid #4f74e3; border-radius: 8px;
+      font-size: 14px; color: var(--muted); background: var(--surface-alt);
+      border-left: 3px solid var(--primary); border-radius: 8px;
       padding: 12px 16px; margin-bottom: 22px; line-height: 1.75;
     }
     details.story-mini summary {
-      font-weight: 700; color: #4f74e3; cursor: pointer;
+      font-weight: 700; color: var(--primary); cursor: pointer;
       font-size: 13px; list-style: none;
       display: flex; align-items: center; gap: 6px;
     }
@@ -221,100 +346,238 @@
     details.story-mini .mini-text p { margin-bottom: 10px; }
     details.story-mini .mini-text p:last-child { margin-bottom: 0; }
 
-    .question-text { font-size: 20px; font-weight: 700; color: #1a1f36; margin-bottom: 22px; line-height: 1.4; }
+    .question-text { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 22px; line-height: 1.4; }
 
     .options { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
 
     .option-btn {
       display: flex; align-items: center; gap: 14px;
-      background: #f7f9ff; border: 2px solid #dce3f5;
+      background: var(--surface-alt); border: 2px solid var(--border);
       border-radius: 12px; padding: 14px 18px;
-      font-size: 16px; color: #1a1f36; cursor: pointer;
+      font-size: 16px; color: var(--text); cursor: pointer;
       text-align: left; font-family: inherit;
       transition: border-color 0.15s, background 0.15s, transform 0.1s;
       width: 100%;
     }
-    .option-btn:hover:not(:disabled) { border-color: #4f74e3; background: #eef2ff; transform: translateY(-1px); }
-    .option-btn:focus { outline: 2px solid #4f74e3; outline-offset: 2px; }
+    .option-btn:hover:not(:disabled) { border-color: var(--primary); background: var(--primary-bg); transform: translateY(-1px); }
+    .option-btn:focus { outline: 2px solid var(--primary); outline-offset: 2px; }
     .option-btn .letter {
       display: flex; align-items: center; justify-content: center;
       min-width: 30px; height: 30px; border-radius: 50%;
-      background: #dce3f5; font-weight: 700; font-size: 13px;
-      color: #4f74e3; flex-shrink: 0;
+      background: var(--border); font-weight: 700; font-size: 13px;
+      color: var(--primary); flex-shrink: 0;
       transition: background 0.15s, color 0.15s;
     }
-    .option-btn.correct { background: #eafaf1; border-color: #27ae60; }
-    .option-btn.correct .letter { background: #27ae60; color: white; }
-    .option-btn.wrong   { background: #fff0f0; border-color: #e74c3c; }
-    .option-btn.wrong   .letter { background: #e74c3c; color: white; }
+    .option-btn.correct { background: var(--correct-bg); border-color: var(--correct); }
+    .option-btn.correct .letter { background: var(--correct); color: var(--surface); }
+    .option-btn.wrong   { background: var(--wrong-bg); border-color: var(--wrong); }
+    .option-btn.wrong   .letter { background: var(--wrong); color: var(--surface); }
     .option-btn:disabled { cursor: default; transform: none; }
 
     .feedback-box {
       border-radius: 12px; padding: 14px 18px;
       margin-bottom: 20px; display: none;
     }
-    .feedback-box.correct { background: #eafaf1; border: 1.5px solid #a3e6c0; display: block; }
-    .feedback-box.wrong   { background: #fff0f0; border: 1.5px solid #f5c0c0; display: block; }
+    .feedback-box.correct { background: var(--correct-bg); border: 1.5px solid var(--correct-border); display: block; }
+    .feedback-box.wrong   { background: var(--wrong-bg);   border: 1.5px solid var(--wrong-border);   display: block; }
     .feedback-verdict { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
-    .feedback-box.correct .feedback-verdict { color: #1e8449; }
-    .feedback-box.wrong   .feedback-verdict { color: #c0392b; }
-    .feedback-explanation { font-size: 14px; color: #555; line-height: 1.6; font-style: italic; }
+    .feedback-box.correct .feedback-verdict { color: var(--correct-text); }
+    .feedback-box.wrong   .feedback-verdict { color: var(--wrong-text); }
+    .feedback-explanation { font-size: 14px; color: var(--muted); line-height: 1.6; font-style: italic; }
 
     /* ════ RESULTS ════ */
     .results-icon  { font-size: 60px; text-align: center; margin-bottom: 12px; }
-    .results-title { font-size: 26px; font-weight: 800; color: #1a1f36; text-align: center; margin-bottom: 6px; }
-    .results-score { font-size: 18px; color: #7c8db0; text-align: center; margin-bottom: 28px; }
-    .results-score span { color: #4f74e3; font-weight: 700; }
+    .results-title { font-size: 26px; font-weight: 800; color: var(--text); text-align: center; margin-bottom: 6px; }
+    .results-score { font-size: 18px; color: var(--muted); text-align: center; margin-bottom: 28px; }
+    .results-score span { color: var(--primary); font-weight: 700; }
     .results-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
     .results-list li { padding: 12px 16px; border-radius: 10px; font-size: 14px; line-height: 1.5; }
-    .results-list li.ok   { background: #eafaf1; color: #1e8449; }
-    .results-list li.fail { background: #fff0f0; color: #c0392b; }
+    .results-list li.ok   { background: var(--correct-bg); color: var(--correct-text); }
+    .results-list li.fail { background: var(--wrong-bg);   color: var(--wrong-text); }
     .results-list li .q-label { font-weight: 700; display: block; margin-bottom: 2px; }
 
     /* ── SHARED BUTTONS ── */
     .btn-primary {
-      display: block; width: 100%; background: #4f74e3;
-      color: white; border: none; border-radius: 12px;
+      display: block; width: 100%; background: var(--primary);
+      color: var(--surface); border: none; border-radius: 12px;
       padding: 16px; font-size: 17px; font-weight: 700;
       cursor: pointer; font-family: inherit;
       transition: background 0.15s, transform 0.1s;
     }
-    .btn-primary:hover { background: #3a5fc9; transform: translateY(-1px); }
-    .btn-primary:focus { outline: 2px solid #3a5fc9; outline-offset: 2px; }
+    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    .btn-primary:focus { outline: 2px solid var(--primary-dark); outline-offset: 2px; }
 
     .btn-secondary {
       display: block; width: 100%; background: transparent;
-      color: #4f74e3; border: 2px solid #4f74e3;
+      color: var(--primary); border: 2px solid var(--primary);
       border-radius: 12px; padding: 14px;
       font-size: 16px; font-weight: 700; cursor: pointer;
       margin-top: 12px; font-family: inherit;
       transition: background 0.15s;
     }
-    .btn-secondary:hover { background: #eef2ff; }
-    .btn-secondary:focus { outline: 2px solid #4f74e3; outline-offset: 2px; }
+    .btn-secondary:hover { background: var(--primary-bg); }
+    .btn-secondary:focus { outline: 2px solid var(--primary); outline-offset: 2px; }
 
-    /* ════ WORD INTRO ════ */
-    .word-intro-header { margin-bottom: 24px; }
-    .word-intro-eyebrow {
-      font-size: 12px; font-weight: 700;
-      letter-spacing: 1.5px; text-transform: uppercase;
-      color: #7c8db0; margin-bottom: 6px;
+    /* ════ LESSON STEP HEADER (Learn + Practice) ════ */
+    .lesson-step-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 4px;
     }
-    .word-intro-story-title { font-size: 24px; font-weight: 800; color: #1a1f36; margin-bottom: 8px; }
-    .word-intro-instruction  { font-size: 15px; color: #7c8db0; line-height: 1.6; }
+    .lesson-step-progress {
+      font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 28px;
+    }
 
-    .word-cards { display: flex; flex-direction: column; gap: 14px; margin-bottom: 28px; }
+    /* ════ LEARN STEP — FLASHCARD ════ */
+    .flash-card {
+      background: var(--surface-alt); border: 1.5px solid var(--border);
+      border-radius: 20px; padding: 36px 28px;
+      text-align: center; margin-bottom: 28px;
+    }
+    .flash-card-emoji   { font-size: 72px; line-height: 1; margin-bottom: 18px; }
+    .flash-card-word    { font-size: 30px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+    .flash-card-trans   { font-size: 18px; font-weight: 600; color: var(--primary); margin-bottom: 18px; }
+    .flash-card-example {
+      font-size: 14px; color: var(--muted); font-style: italic; line-height: 1.6;
+      border-top: 1px solid var(--border-light); padding-top: 16px;
+    }
+    .flash-img { width: 160px; height: 160px; object-fit: cover; border-radius: 16px; margin-bottom: 18px; }
 
-    .word-card {
-      background: #f7f9ff; border: 1.5px solid #dce3f5;
-      border-radius: 14px; padding: 18px 20px;
+    /* ════ PRACTICE STEP ════ */
+    .practice-prompt   { text-align: center; margin-bottom: 24px; }
+    .practice-emoji    { font-size: 80px; line-height: 1; margin-bottom: 12px; }
+    .practice-question { font-size: 15px; color: var(--muted); margin-bottom: 0; }
+
+    .practice-options { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+
+    .practice-option {
+      background: var(--surface-alt); border: 2px solid var(--border);
+      border-radius: 12px; padding: 16px 20px;
+      font-size: 18px; font-weight: 700; color: var(--text);
+      cursor: pointer; text-align: center; font-family: inherit; width: 100%;
+      transition: border-color 0.15s, background 0.15s, transform 0.1s;
     }
-    .word-card-nl  { font-size: 22px; font-weight: 800; color: #1a1f36; margin-bottom: 4px; }
-    .word-card-en  { font-size: 15px; font-weight: 600; color: #4f74e3; margin-bottom: 8px; }
-    .word-card-example {
-      font-size: 13px; color: #7c8db0; font-style: italic; line-height: 1.5;
-      border-top: 1px solid #e8ecf5; padding-top: 8px;
+    .practice-option:hover:not(:disabled) { border-color: var(--primary); background: var(--primary-bg); transform: translateY(-1px); }
+    .practice-option:focus { outline: 2px solid var(--primary); outline-offset: 2px; }
+    .practice-option.correct { background: var(--correct-bg); border-color: var(--correct); color: var(--correct-text); }
+    .practice-option.wrong   { background: var(--wrong-bg);   border-color: var(--wrong);   color: var(--wrong-text); }
+    .practice-option:disabled { cursor: default; transform: none; }
+
+    /* ════ REVIEW SECTION (inside results) ════ */
+    .review-section {
+      margin-bottom: 24px; padding: 20px;
+      background: var(--surface-alt); border: 1.5px solid var(--border); border-radius: 14px;
     }
+    .review-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 14px;
+    }
+    .review-word-row {
+      display: flex; align-items: center; gap: 14px;
+      padding: 10px 0; border-bottom: 1px solid var(--border-light);
+    }
+    .review-word-row:last-child { border-bottom: none; }
+    .review-emoji     { font-size: 28px; flex-shrink: 0; }
+    .review-word-info { flex: 1; }
+    .review-word-nl   { font-size: 16px; font-weight: 700; color: var(--text); }
+    .review-word-en   { font-size: 13px; color: var(--primary); }
+
+    /* ════ STANDALONE FLASHCARD THEMES ════ */
+    .fc-themes-header { margin-bottom: 28px; }
+    .fc-themes-header h1 { font-size: 22px; font-weight: 800; color: var(--text); }
+
+    .fc-theme-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .fc-theme-card {
+      display: flex; align-items: center; gap: 18px;
+      border: 2px solid var(--border); border-radius: 16px;
+      padding: 20px; cursor: pointer;
+      transition: border-color 0.15s, background 0.15s, transform 0.1s;
+      background: var(--surface-alt); width: 100%; text-align: left;
+      font-family: inherit;
+    }
+    .fc-theme-card:hover { border-color: var(--primary); background: var(--primary-bg); transform: translateY(-2px); }
+    .fc-theme-card:focus { outline: 2px solid var(--primary); outline-offset: 2px; }
+    .fc-theme-icon { font-size: 38px; flex-shrink: 0; }
+    .fc-theme-info h2 { font-size: 17px; font-weight: 800; color: var(--text); }
+    .fc-theme-info p  { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+    /* ════ STANDALONE FLASHCARD LEARN (FLIP CARD) ════ */
+    .fc-learn-header { margin-bottom: 20px; }
+    .fc-progress-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 4px;
+    }
+    .fc-progress-text { font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+
+    .flip-card {
+      width: 100%; height: 280px;
+      perspective: 800px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+    .flip-card-inner {
+      position: relative;
+      width: 100%; height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.45s ease;
+    }
+    .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+    .flip-card-front,
+    .flip-card-back {
+      position: absolute; width: 100%; height: 100%;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 20px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 28px; text-align: center;
+      background: var(--surface-alt); border: 1.5px solid var(--border);
+    }
+    .flip-card-back {
+      transform: rotateY(180deg);
+      background: var(--primary-bg); border-color: var(--primary-border);
+    }
+    .fc-front-emoji { font-size: 72px; line-height: 1; margin-bottom: 16px; }
+    .fc-front-hint  { font-size: 13px; color: var(--muted); font-style: italic; }
+    .fc-back-word   { font-size: 32px; font-weight: 800; color: var(--text); margin-bottom: 10px; }
+    .fc-back-trans  { font-size: 18px; font-weight: 600; color: var(--primary); }
+
+    .fc-next-btn-wrap { margin-top: 4px; }
+
+    /* ════ STANDALONE FLASHCARD QUIZ ════ */
+    .fc-quiz-header { margin-bottom: 24px; }
+    .fc-quiz-progress-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 4px;
+    }
+    .fc-quiz-progress-text { font-size: 22px; font-weight: 800; color: var(--text); }
+
+    .fc-quiz-visual {
+      text-align: center; font-size: 80px; line-height: 1;
+      margin-bottom: 16px;
+    }
+    .fc-quiz-question { font-size: 15px; color: var(--muted); text-align: center; margin-bottom: 20px; }
+
+    .fc-quiz-options { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+    .fc-quiz-option {
+      background: var(--surface-alt); border: 2px solid var(--border);
+      border-radius: 12px; padding: 16px 20px;
+      font-size: 18px; font-weight: 700; color: var(--text);
+      cursor: pointer; text-align: center; font-family: inherit; width: 100%;
+      transition: border-color 0.15s, background 0.15s, transform 0.1s;
+    }
+    .fc-quiz-option:hover:not(:disabled) { border-color: var(--primary); background: var(--primary-bg); transform: translateY(-1px); }
+    .fc-quiz-option:focus { outline: 2px solid var(--primary); outline-offset: 2px; }
+    .fc-quiz-option.correct { background: var(--correct-bg); border-color: var(--correct); color: var(--correct-text); }
+    .fc-quiz-option.wrong   { background: var(--wrong-bg);   border-color: var(--wrong);   color: var(--wrong-text); }
+    .fc-quiz-option:disabled { cursor: default; transform: none; }
+
+    .fc-quiz-result { text-align: center; padding: 32px 0; display: none; }
+    .fc-quiz-result.visible { display: block; }
+    .fc-quiz-result-icon  { font-size: 60px; margin-bottom: 16px; }
+    .fc-quiz-result-title { font-size: 24px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+    .fc-quiz-result-score { font-size: 17px; color: var(--muted); margin-bottom: 28px; }
+    .fc-quiz-result-score span { color: var(--primary); font-weight: 700; }
 
     @media (max-width: 500px) {
       body { padding: 16px 12px; }
@@ -322,17 +585,23 @@
       .lang-options { flex-direction: column; }
       .lang-option-btn { flex-direction: row; padding: 18px 16px; }
       .lang-flag { font-size: 32px; }
+      .flip-card { height: 240px; }
     }
   </style>
 </head>
 <body>
 <div class="card">
 
-  <button class="lang-indicator hidden" id="lang-indicator" onclick="goToLangScreen()">
-    <span id="ui-indicator-flag"></span>
-    <span id="ui-indicator-label"></span>
-  </button>
+  <!-- CARD TOPBAR: lang indicator + theme toggle -->
+  <div class="card-topbar">
+    <button class="lang-indicator hidden" id="lang-indicator" onclick="goToHome()">
+      <span id="ui-indicator-flag"></span>
+      <span id="ui-indicator-label"></span>
+    </button>
+    <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle theme">🌙</button>
+  </div>
 
+  <!-- WORD POPUP -->
   <div id="word-popup" class="word-popup hidden" role="dialog" aria-label="Word explanation">
     <div class="popup-header">
       <span class="popup-word" id="popup-word"></span>
@@ -343,11 +612,24 @@
     <div class="popup-example" id="popup-example"></div>
   </div>
 
-  <!-- ════ SCREEN 1: INTERFACE LANGUAGE ════ -->
-  <div id="screen-ui-lang" class="screen active">
+  <!-- ════ SCREEN: HOME ════ -->
+  <div id="screen-home" class="screen active">
+    <div class="home-wrapper">
+      <div class="home-app-icon">📖</div>
+      <h1 class="home-title" id="ui-home-title">Language Learning</h1>
+      <p class="home-subtitle" id="ui-home-subtitle">Learn Dutch or English with short stories and flashcards.</p>
+      <div class="home-actions">
+        <button class="btn-primary" id="ui-home-start" onclick="showScreen('screen-practice-select')">Start practising</button>
+        <button class="btn-secondary" id="ui-home-about" onclick="showScreen('screen-about')">About &amp; Contact</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ SCREEN: INTERFACE LANGUAGE (legacy, kept for compat) ════ -->
+  <div id="screen-ui-lang" class="screen">
     <div class="lang-screen-header">
-      <h1>Choose your language<br><span style="font-size:18px;font-weight:600;color:#7c8db0">Kies je taal</span></h1>
-      <p>For buttons and instructions<br><span style="font-size:13px;color:#aab">Voor knoppen en uitleg</span></p>
+      <h1>Choose your language<br><span style="font-size:18px;font-weight:600;color:var(--muted)">Kies je taal</span></h1>
+      <p>For buttons and instructions<br><span style="font-size:13px;color:var(--muted)">Voor knoppen en uitleg</span></p>
     </div>
     <div class="lang-options">
       <button class="lang-option-btn" onclick="selectUiLang('en')">
@@ -361,7 +643,7 @@
     </div>
   </div>
 
-  <!-- ════ SCREEN 2: LEARNING LANGUAGE ════ -->
+  <!-- ════ SCREEN: LEARNING LANGUAGE (legacy) ════ -->
   <div id="screen-learn-lang" class="screen">
     <div class="lang-screen-header">
       <h1 id="ui-learn-title"></h1>
@@ -379,8 +661,64 @@
     </div>
   </div>
 
-  <!-- ════ SCREEN 3: STORY SELECTION ════ -->
+  <!-- ════ SCREEN: PRACTICE SELECT ════ -->
+  <div id="screen-practice-select" class="screen">
+    <button class="back-link" onclick="showScreen('screen-home')" id="ui-ps-back">← Home</button>
+    <div class="practice-select-header">
+      <h1 id="ui-ps-title">What do you want to practise?</h1>
+    </div>
+    <div class="practice-option-list">
+      <button class="practice-select-btn" onclick="selectPractice('nl')">
+        <span class="practice-select-flag">🇳🇱</span>
+        <div>
+          <div class="practice-select-name" id="ui-ps-nl">Practise Dutch</div>
+          <div class="practice-select-sub" id="ui-ps-nl-sub">Stories &amp; words in Dutch</div>
+        </div>
+      </button>
+      <button class="practice-select-btn" onclick="selectPractice('en')">
+        <span class="practice-select-flag">🇬🇧</span>
+        <div>
+          <div class="practice-select-name" id="ui-ps-en">Practise English</div>
+          <div class="practice-select-sub" id="ui-ps-en-sub">Stories &amp; words in English</div>
+        </div>
+      </button>
+      <button class="practice-select-btn" onclick="showScreen('screen-flashcard-themes')">
+        <span class="practice-select-flag">📚</span>
+        <div>
+          <div class="practice-select-name" id="ui-ps-fc">Word flashcards</div>
+          <div class="practice-select-sub" id="ui-ps-fc-sub">Learn words with flip cards</div>
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <!-- ════ SCREEN: ABOUT ════ -->
+  <div id="screen-about" class="screen">
+    <button class="back-link" onclick="showScreen('screen-home')" id="ui-about-back">← Home</button>
+    <div class="about-header">
+      <h1 id="ui-about-title">About &amp; Contact</h1>
+    </div>
+    <div class="about-section">
+      <p class="about-label" id="ui-about-name-label">Name</p>
+      <p class="about-value">[PLACEHOLDER: jouw naam]</p>
+    </div>
+    <div class="about-section">
+      <p class="about-label" id="ui-about-contact-label">Contact</p>
+      <p class="about-value">[PLACEHOLDER: e-mail of telefoonnummer]</p>
+    </div>
+    <div class="about-section">
+      <p class="about-label">LinkedIn</p>
+      <p class="about-value">
+        <a class="about-link" href="[PLACEHOLDER_LINKEDIN_URL]" target="_blank" rel="noopener">
+          [PLACEHOLDER: linkedin.com/in/jouw-profiel]
+        </a>
+      </p>
+    </div>
+  </div>
+
+  <!-- ════ SCREEN: STORY SELECTION ════ -->
   <div id="screen-select" class="screen">
+    <button class="back-link" onclick="showScreen('screen-practice-select')" id="ui-select-back">← Back</button>
     <div class="select-header">
       <p class="label-sm" id="ui-lang-label"></p>
       <h1 id="ui-choose-story"></h1>
@@ -388,19 +726,37 @@
     <div class="story-cards" id="story-cards-wrap"></div>
   </div>
 
-  <!-- ════ SCREEN 3b: WORD INTRO ════ -->
+  <!-- ════ SCREEN: LEARN STEP ════ -->
   <div id="screen-word-intro" class="screen">
-    <button class="back-link" id="ui-word-intro-back" onclick="showScreen('screen-select')"></button>
-    <div class="word-intro-header">
-      <p class="word-intro-eyebrow" id="ui-word-intro-eyebrow"></p>
-      <h1 class="word-intro-story-title" id="word-intro-story-title"></h1>
-      <p class="word-intro-instruction" id="ui-word-intro-instruction"></p>
+    <button class="back-link" id="ui-learn-back" onclick="showScreen('screen-select')"></button>
+    <p class="lesson-step-label" id="ui-learn-step-label"></p>
+    <p class="lesson-step-progress" id="learn-progress"></p>
+    <div class="flash-card" id="learn-flash-card">
+      <div class="flash-card-emoji" id="learn-emoji"></div>
+      <div class="flash-card-word"  id="learn-word"></div>
+      <div class="flash-card-trans" id="learn-trans"></div>
+      <div class="flash-card-example" id="learn-example"></div>
     </div>
-    <div class="word-cards" id="word-cards-wrap"></div>
-    <button class="btn-primary" id="ui-word-intro-btn" onclick="showScreen('screen-story')"></button>
+    <button class="btn-primary" id="ui-learn-next-btn" onclick="nextLearnCard()"></button>
   </div>
 
-  <!-- ════ SCREEN 4: STORY READING ════ -->
+  <!-- ════ SCREEN: PRACTICE STEP ════ -->
+  <div id="screen-practice" class="screen">
+    <button class="back-link" id="ui-practice-back" onclick="showScreen('screen-select')"></button>
+    <p class="lesson-step-label" id="ui-practice-step-label"></p>
+    <p class="lesson-step-progress" id="practice-progress"></p>
+    <div class="practice-prompt">
+      <div class="practice-emoji"   id="practice-emoji"></div>
+      <p  class="practice-question" id="ui-practice-question"></p>
+    </div>
+    <div class="practice-options" id="practice-options-wrap"></div>
+    <div class="feedback-box" id="practice-feedback-box">
+      <div class="feedback-verdict" id="practice-verdict"></div>
+    </div>
+    <button class="btn-primary" id="ui-practice-next-btn" style="display:none;" onclick="nextPracticeItem()"></button>
+  </div>
+
+  <!-- ════ SCREEN: STORY READING ════ -->
   <div id="screen-story" class="screen">
     <button class="back-link" id="ui-back-link" onclick="showScreen('screen-select')"></button>
     <p class="story-label" id="ui-read-story"></p>
@@ -413,7 +769,7 @@
     <button class="btn-primary" id="ui-start-btn" onclick="startQuestions()"></button>
   </div>
 
-  <!-- ════ SCREEN 5: QUESTIONS ════ -->
+  <!-- ════ SCREEN: QUESTIONS ════ -->
   <div id="screen-question" class="screen">
     <div class="progress-bar-wrap">
       <div class="progress-bar-fill" id="progress-fill"></div>
@@ -432,91 +788,305 @@
     <button class="btn-primary" id="next-btn" style="display:none;" onclick="nextQuestion()"></button>
   </div>
 
-  <!-- ════ SCREEN 6: RESULTS ════ -->
+  <!-- ════ SCREEN: RESULTS ════ -->
   <div id="screen-results" class="screen">
     <div class="results-icon" id="results-icon"></div>
     <h2 class="results-title" id="results-title"></h2>
     <p class="results-score" id="results-score"></p>
     <ul class="results-list" id="results-list"></ul>
-    <button class="btn-primary" id="ui-try-again" onclick="startQuestions()"></button>
-    <button class="btn-secondary" id="ui-reread-story" onclick="showScreen('screen-story')"></button>
+    <div class="review-section" id="review-section">
+      <p class="review-label" id="ui-review-label"></p>
+      <div id="review-words-wrap"></div>
+    </div>
+    <button class="btn-primary"   id="ui-try-again"      onclick="startQuestions()"></button>
+    <button class="btn-secondary" id="ui-reread-story"   onclick="showScreen('screen-story')"></button>
     <button class="btn-secondary" id="ui-choose-another" onclick="showScreen('screen-select')"></button>
   </div>
 
-</div>
+  <!-- ════ SCREEN: FLASHCARD THEMES ════ -->
+  <div id="screen-flashcard-themes" class="screen">
+    <button class="back-link" onclick="showScreen('screen-practice-select')" id="ui-fc-themes-back">← Back</button>
+    <div class="fc-themes-header">
+      <h1 id="ui-fc-themes-title">Choose a theme</h1>
+    </div>
+    <div class="fc-theme-list" id="fc-theme-list"></div>
+  </div>
+
+  <!-- ════ SCREEN: FLASHCARD LEARN ════ -->
+  <div id="screen-flashcard-learn" class="screen">
+    <button class="back-link" onclick="showScreen('screen-flashcard-themes')" id="ui-fc-learn-back">← Themes</button>
+    <div class="fc-learn-header">
+      <p class="fc-progress-label" id="ui-fc-learn-label">Learn</p>
+      <p class="fc-progress-text" id="fc-learn-progress">Card 1 of 5</p>
+    </div>
+    <div class="flip-card" id="fc-flip-card" onclick="flipCard()" role="button" tabindex="0" aria-label="Tap to flip card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <div class="fc-front-emoji" id="fc-front-visual">❓</div>
+          <p class="fc-front-hint" id="ui-fc-flip-hint">Tap to reveal →</p>
+        </div>
+        <div class="flip-card-back">
+          <div class="fc-back-word"  id="fc-back-word"></div>
+          <div class="fc-back-trans" id="fc-back-trans"></div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-next-btn-wrap">
+      <button class="btn-primary" id="ui-fc-next-btn" style="display:none;" onclick="nextFlashcard()">Next card →</button>
+    </div>
+  </div>
+
+  <!-- ════ SCREEN: FLASHCARD QUIZ ════ -->
+  <div id="screen-flashcard-quiz" class="screen">
+    <button class="back-link" onclick="showScreen('screen-flashcard-themes')" id="ui-fc-quiz-back">← Themes</button>
+
+    <!-- Question area -->
+    <div id="fc-quiz-question-area">
+      <div class="fc-quiz-header">
+        <p class="fc-quiz-progress-label" id="ui-fc-quiz-label">Practice</p>
+        <p class="fc-quiz-progress-text"  id="fc-quiz-progress">Question 1 of 5</p>
+      </div>
+      <div class="fc-quiz-visual" id="fc-quiz-visual">❓</div>
+      <p class="fc-quiz-question" id="ui-fc-quiz-question">Which word matches the picture?</p>
+      <div class="fc-quiz-options" id="fc-quiz-options"></div>
+      <div class="feedback-box" id="fc-quiz-feedback">
+        <div class="feedback-verdict" id="fc-quiz-verdict"></div>
+      </div>
+      <button class="btn-primary" id="ui-fc-quiz-next" style="display:none;" onclick="nextFlashcardQuizItem()">Next →</button>
+    </div>
+
+    <!-- Result area -->
+    <div class="fc-quiz-result" id="fc-quiz-result">
+      <div class="fc-quiz-result-icon" id="fc-quiz-result-icon">🏆</div>
+      <h2 class="fc-quiz-result-title" id="ui-fc-quiz-done">Well done!</h2>
+      <p class="fc-quiz-result-score" id="fc-quiz-result-score"></p>
+      <button class="btn-primary"   id="ui-fc-quiz-retry" onclick="retryFlashcardQuiz()">Try again</button>
+      <button class="btn-secondary" id="ui-fc-quiz-themes" onclick="showScreen('screen-flashcard-themes')">← Choose theme</button>
+    </div>
+  </div>
+
+</div><!-- .card -->
 
 <script>
+  // ══════════════════════════════════════════
+  //  THEME — initialise before first paint
+  // ══════════════════════════════════════════
+  (function loadTheme() {
+    try {
+      const t = localStorage.getItem("lapp_theme");
+      if (t) document.documentElement.setAttribute("data-theme", t);
+    } catch {}
+    updateThemeIcon();
+  })();
+
+  function updateThemeIcon() {
+    const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+    const btn = document.getElementById("theme-toggle-btn");
+    if (btn) { btn.textContent = isDark ? "☀️" : "🌙"; btn.setAttribute("aria-label", isDark ? "Switch to light mode" : "Switch to dark mode"); }
+  }
+
+  function toggleTheme() {
+    const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+    const next = isDark ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("lapp_theme", next); } catch {}
+    updateThemeIcon();
+  }
+
   // ══════════════════════════════════════════
   //  I18N
   // ══════════════════════════════════════════
   const i18n = {
     en: {
-      learnTitle:     "What do you want to practise?",
-      learnSubtitle:  "Choose the language you want to learn.",
-      langLabel:      "Stories",
-      chooseStory:    "Choose a story",
-      readStory:      "Read the story",
-      allStories:     "← All stories",
-      startQuestions: "I'm ready — start the questions!",
-      reread:         "Re-read the story",
-      keywordsLabel:  "Key words:",
-      questionOf:     (x, y) => `Question ${x} of ${y}`,
-      correct:        "Correct!",
-      wrong:          (ans) => `Not quite. The answer was: "${ans}"`,
-      nextQuestion:   "Next question →",
-      seeResults:     "See my results!",
-      perfectScore:   "Perfect score!",
-      greatJob:       "Great job!",
-      goodEffort:     "Good effort!",
-      keepPractising: "Keep practising!",
-      gotCorrect:     (x, y) => `You got <span>${x} out of ${y}</span> correct.`,
-      tryAgain:       "Try again",
-      rereadStory:    "Re-read the story",
-      chooseAnother:  "Choose another story",
-      yourAnswer:     "Your answer:",
-      correctAnswer:  "Correct:",
-      questionsTag:   "questions",
-      doneTag:        "Done",
-      exampleLabel:      "Example:",
-      indicatorLabel:    "Learning",
-      wordIntroEyebrow:  "Before you read",
-      wordIntroInstruction: "Learn these words. Then read the story.",
-      startReading:      "Start reading →",
+      // Home
+      homeTitle:           "Language Learning",
+      homeSubtitle:        "Learn Dutch or English with short stories and flashcards.",
+      homeStart:           "Start practising",
+      homeAbout:           "About & Contact",
+      // Practice select
+      psTitle:             "What do you want to practise?",
+      psBack:              "← Home",
+      psNL:                "Practise Dutch",
+      psNLSub:             "Stories & words in Dutch",
+      psEN:                "Practise English",
+      psENSub:             "Stories & words in English",
+      psFC:                "Word flashcards",
+      psFCSub:             "Learn words with flip cards",
+      // About
+      aboutTitle:          "About & Contact",
+      aboutBack:           "← Home",
+      aboutNameLabel:      "Name",
+      aboutContactLabel:   "Contact",
+      // Story selection
+      selectBack:          "← Back",
+      learnTitle:          "What do you want to practise?",
+      learnSubtitle:       "Choose the language you want to learn.",
+      langLabel:           "Stories",
+      chooseStory:         "Choose a story",
+      // Story reading
+      readStory:           "Read the story",
+      allStories:          "← All stories",
+      startQuestions:      "I'm ready — start the questions!",
+      reread:              "Re-read the story",
+      keywordsLabel:       "Key words:",
+      // Questions
+      questionOf:          (x, y) => `Question ${x} of ${y}`,
+      correct:             "Correct!",
+      wrong:               (ans) => `Not quite. The answer was: "${ans}"`,
+      nextQuestion:        "Next question →",
+      seeResults:          "See my results!",
+      // Results
+      perfectScore:        "Perfect score!",
+      greatJob:            "Great job!",
+      goodEffort:          "Good effort!",
+      keepPractising:      "Keep practising!",
+      gotCorrect:          (x, y) => `You got <span>${x} out of ${y}</span> correct.`,
+      tryAgain:            "Try again",
+      rereadStory:         "Re-read the story",
+      chooseAnother:       "Choose another story",
+      yourAnswer:          "Your answer:",
+      correctAnswer:       "Correct:",
+      questionsTag:        "questions",
+      doneTag:             "Done",
+      exampleLabel:        "Example:",
+      indicatorLabel:      "Learning",
+      // Learn step
+      learnStepLabel:      "Step 1 · Learn words",
+      cardOf:              (x, y) => `Word ${x} of ${y}`,
+      nextWord:            "Next word →",
+      startPractice:       "Start practice →",
+      // Practice step
+      practiceStepLabel:   "Step 2 · Practice",
+      practiceQuestion:    "Which word matches this picture?",
+      practiceCorrect:     "Correct!",
+      practiceWrong:       "Not quite — look at the right word.",
+      startReading:        "Start reading →",
+      // Review
+      wordsLearned:        "Words you learned",
+      // Flashcard themes
+      fcThemesTitle:       "Choose a theme",
+      fcThemesBack:        "← Back",
+      // Flashcard learn
+      fcLearnLabel:        "Learn",
+      fcLearnBack:         "← Themes",
+      fcFlipHint:          "Tap to reveal →",
+      fcNextCard:          "Next card →",
+      fcCardOf:            (x, y) => `Card ${x} of ${y}`,
+      // Flashcard quiz
+      fcQuizLabel:         "Practice",
+      fcQuizBack:          "← Themes",
+      fcQuizQuestion:      "Which word matches the picture?",
+      fcQuizNext:          "Next →",
+      fcQuizDone:          "Well done!",
+      fcQuizRetry:         "Try again",
+      fcQuizThemes:        "← Choose theme",
+      fcQuizScore:         (x, y) => `You got <span>${x} of ${y}</span> correct!`,
     },
     nl: {
-      learnTitle:     "Wat wil je oefenen?",
-      learnSubtitle:  "Kies de taal die je wilt leren.",
-      langLabel:      "Verhalen",
-      chooseStory:    "Kies een verhaal",
-      readStory:      "Lees het verhaal",
-      allStories:     "← Alle verhalen",
-      startQuestions: "Ik ben klaar — start de vragen!",
-      reread:         "Herlees het verhaal",
-      keywordsLabel:  "Sleutelwoorden:",
-      questionOf:     (x, y) => `Vraag ${x} van ${y}`,
-      correct:        "Correct!",
-      wrong:          (ans) => `Niet helemaal. Het antwoord was: "${ans}"`,
-      nextQuestion:   "Volgende vraag →",
-      seeResults:     "Bekijk mijn resultaten!",
-      perfectScore:   "Perfecte score!",
-      greatJob:       "Geweldig gedaan!",
-      goodEffort:     "Goed geprobeerd!",
-      keepPractising: "Blijf oefenen!",
-      gotCorrect:     (x, y) => `Je had <span>${x} van de ${y}</span> goed.`,
-      tryAgain:       "Opnieuw proberen",
-      rereadStory:    "Herlees het verhaal",
-      chooseAnother:  "Kies een ander verhaal",
-      yourAnswer:     "Jouw antwoord:",
-      correctAnswer:  "Juist:",
-      questionsTag:   "vragen",
-      doneTag:        "Klaar",
-      exampleLabel:      "Voorbeeld:",
-      indicatorLabel:    "Je leert",
-      wordIntroEyebrow:  "Voordat je leest",
-      wordIntroInstruction: "Leer deze woorden. Dan lees je het verhaal.",
-      startReading:      "Begin met lezen →",
+      // Home
+      homeTitle:           "Taal Leren",
+      homeSubtitle:        "Leer Nederlands of Engels met korte verhalen en woordkaarten.",
+      homeStart:           "Begin met oefenen",
+      homeAbout:           "Over / Contact",
+      // Practice select
+      psTitle:             "Wat wil je oefenen?",
+      psBack:              "← Home",
+      psNL:                "Nederlands oefenen",
+      psNLSub:             "Verhalen en woorden in het Nederlands",
+      psEN:                "Engels oefenen",
+      psENSub:             "Verhalen en woorden in het Engels",
+      psFC:                "Woordkaarten",
+      psFCSub:             "Leer woorden met omdraaikaarten",
+      // About
+      aboutTitle:          "Over / Contact",
+      aboutBack:           "← Home",
+      aboutNameLabel:      "Naam",
+      aboutContactLabel:   "Contact",
+      // Story selection
+      selectBack:          "← Terug",
+      learnTitle:          "Wat wil je oefenen?",
+      learnSubtitle:       "Kies de taal die je wilt leren.",
+      langLabel:           "Verhalen",
+      chooseStory:         "Kies een verhaal",
+      // Story reading
+      readStory:           "Lees het verhaal",
+      allStories:          "← Alle verhalen",
+      startQuestions:      "Ik ben klaar — start de vragen!",
+      reread:              "Herlees het verhaal",
+      keywordsLabel:       "Sleutelwoorden:",
+      // Questions
+      questionOf:          (x, y) => `Vraag ${x} van ${y}`,
+      correct:             "Correct!",
+      wrong:               (ans) => `Niet helemaal. Het antwoord was: "${ans}"`,
+      nextQuestion:        "Volgende vraag →",
+      seeResults:          "Bekijk mijn resultaten!",
+      // Results
+      perfectScore:        "Perfecte score!",
+      greatJob:            "Geweldig gedaan!",
+      goodEffort:          "Goed geprobeerd!",
+      keepPractising:      "Blijf oefenen!",
+      gotCorrect:          (x, y) => `Je had <span>${x} van de ${y}</span> goed.`,
+      tryAgain:            "Opnieuw proberen",
+      rereadStory:         "Herlees het verhaal",
+      chooseAnother:       "Kies een ander verhaal",
+      yourAnswer:          "Jouw antwoord:",
+      correctAnswer:       "Juist:",
+      questionsTag:        "vragen",
+      doneTag:             "Klaar",
+      exampleLabel:        "Voorbeeld:",
+      indicatorLabel:      "Je leert",
+      // Learn step
+      learnStepLabel:      "Stap 1 · Leer woorden",
+      cardOf:              (x, y) => `Woord ${x} van ${y}`,
+      nextWord:            "Volgend woord →",
+      startPractice:       "Begin met oefenen →",
+      // Practice step
+      practiceStepLabel:   "Stap 2 · Oefenen",
+      practiceQuestion:    "Welk woord hoort bij deze afbeelding?",
+      practiceCorrect:     "Correct!",
+      practiceWrong:       "Niet helemaal — kijk naar het juiste woord.",
+      startReading:        "Begin met lezen →",
+      // Review
+      wordsLearned:        "Woorden die je hebt geleerd",
+      // Flashcard themes
+      fcThemesTitle:       "Kies een thema",
+      fcThemesBack:        "← Terug",
+      // Flashcard learn
+      fcLearnLabel:        "Leren",
+      fcLearnBack:         "← Thema's",
+      fcFlipHint:          "Tik om te onthullen →",
+      fcNextCard:          "Volgende kaart →",
+      fcCardOf:            (x, y) => `Kaart ${x} van ${y}`,
+      // Flashcard quiz
+      fcQuizLabel:         "Oefenen",
+      fcQuizBack:          "← Thema's",
+      fcQuizQuestion:      "Welk woord hoort bij deze afbeelding?",
+      fcQuizNext:          "Volgende →",
+      fcQuizDone:          "Goed gedaan!",
+      fcQuizRetry:         "Opnieuw proberen",
+      fcQuizThemes:        "← Kies thema",
+      fcQuizScore:         (x, y) => `Je had <span>${x} van de ${y}</span> goed!`,
     }
   };
+
+  // ══════════════════════════════════════════
+  //  STANDALONE FLASHCARD DATA
+  // ══════════════════════════════════════════
+  const flashcardSets = [
+    {
+      id: "supermarket",
+      title: { en: "Supermarket", nl: "Supermarkt" },
+      subtitle: { en: "5 everyday words", nl: "5 dagelijkse woorden" },
+      emoji: "🛒",
+      cards: [
+        { nl: "boodschappen", en: "groceries",  emoji: "🛒", image: null, audio: null },
+        { nl: "kassa",        en: "checkout",   emoji: "💳", image: null, audio: null },
+        { nl: "korting",      en: "discount",   emoji: "🏷️", image: null, audio: null },
+        { nl: "tas",          en: "bag",        emoji: "👜", image: null, audio: null },
+        { nl: "wachten",      en: "to wait",    emoji: "⏳", image: null, audio: null },
+      ]
+    }
+  ];
 
   // ══════════════════════════════════════════
   //  STORIES
@@ -531,10 +1101,10 @@
         title:  "Family Picnic",
         teaser: "James and his family spend a sunny Sunday in the park.",
         keywords: [
-          { word: "picnic",       translation: { nl: "picknick" },      meaning: { en: "a meal eaten outside in nature" },            example: "We had a picnic in the park." },
-          { word: "blanket",      translation: { nl: "kleedje" },       meaning: { en: "a piece of cloth to sit on" },                example: "We sat on a blanket on the grass." },
-          { word: "sandwiches",   translation: { nl: "boterhammen" },   meaning: { en: "bread with filling inside" },                 example: "She made sandwiches with cheese." },
-          { word: "hide and seek",translation: { nl: "verstoppertje" }, meaning: { en: "a game where you hide and someone finds you" },example: "The children played hide and seek." }
+          { word: "picnic",        emoji: "🧺", audio: null, image: null, translation: { nl: "picknick" },      meaning: { en: "a meal eaten outside in nature" },             example: "We had a picnic in the park." },
+          { word: "blanket",       emoji: "🛏️", audio: null, image: null, translation: { nl: "kleedje" },       meaning: { en: "a piece of cloth to sit on" },                 example: "We sat on a blanket on the grass." },
+          { word: "sandwiches",    emoji: "🥪", audio: null, image: null, translation: { nl: "boterhammen" },   meaning: { en: "bread with filling inside" },                  example: "She made sandwiches with cheese." },
+          { word: "hide and seek", emoji: "🙈", audio: null, image: null, translation: { nl: "verstoppertje" }, meaning: { en: "a game where you hide and someone finds you" }, example: "The children played hide and seek." }
         ],
         paragraphs: [
           "I am James. This is my family.",
@@ -545,21 +1115,21 @@
           "We all laughed. It was a fun day at the park. I love my family."
         ],
         questions: [
-          { question: "What is the name of the boy?",          options: ["Tom","Jack","James","Sam"],                                                                   correct: 2, explanation: { en: "The story starts with: \"I am James.\"",           nl: "Het verhaal begint met: \"I am James.\""           } },
-          { question: "Where did the family go last Sunday?",  options: ["To the beach","To a restaurant","To school","To the park"],                                    correct: 3, explanation: { en: "The story says: \"We went to the park.\"",            nl: "In het verhaal staat: \"We went to the park.\""            } },
-          { question: "What did mom bring?",                   options: ["Cookies, milk, and fruit","Sandwiches, apples, and juice","Pizza, chips, and water","Cake, tea, and biscuits"], correct: 1, explanation: { en: "The story says: \"She had sandwiches, apples, and juice.\"", nl: "In het verhaal staat: \"She had sandwiches, apples, and juice.\"" } },
-          { question: "What game did they play after eating?", options: ["Football","Tag","Hide and seek","Catch"],                                                       correct: 2, explanation: { en: "The story says: \"we played hide and seek.\"",       nl: "In het verhaal staat: \"we played hide and seek.\""       } },
-          { question: "Where did James hide?",                 options: ["Behind a bush","Under the blanket","Behind his mom","Behind the tree"],                         correct: 3, explanation: { en: "The story says: \"I hid behind the tree.\"",          nl: "In het verhaal staat: \"I hid behind the tree.\""          } }
+          { question: "What is the name of the boy?",          options: ["Tom","Jack","James","Sam"],                                                                              correct: 2, explanation: { en: "The story starts with: \"I am James.\"",                        nl: "Het verhaal begint met: \"I am James.\""           } },
+          { question: "Where did the family go last Sunday?",  options: ["To the beach","To a restaurant","To school","To the park"],                                               correct: 3, explanation: { en: "The story says: \"We went to the park.\"",                         nl: "In het verhaal staat: \"We went to the park.\""    } },
+          { question: "What did mom bring?",                   options: ["Cookies, milk, and fruit","Sandwiches, apples, and juice","Pizza, chips, and water","Cake, tea, and biscuits"], correct: 1, explanation: { en: "The story says: \"She had sandwiches, apples, and juice.\"",   nl: "In het verhaal staat: \"She had sandwiches, apples, and juice.\"" } },
+          { question: "What game did they play after eating?", options: ["Football","Tag","Hide and seek","Catch"],                                                                  correct: 2, explanation: { en: "The story says: \"we played hide and seek.\"",                    nl: "In het verhaal staat: \"we played hide and seek.\""       } },
+          { question: "Where did James hide?",                 options: ["Behind a bush","Under the blanket","Behind his mom","Behind the tree"],                                    correct: 3, explanation: { en: "The story says: \"I hid behind the tree.\"",                     nl: "In het verhaal staat: \"I hid behind the tree.\""          } }
         ]
       },
       nl: {
         title:  "Familiedag in het Park",
         teaser: "James en zijn familie brengen een zonnige zondag door in het park.",
         keywords: [
-          { word: "picknick",      translation: { en: "picnic" },          meaning: { nl: "buiten eten in de natuur" },               example: "We hadden een picknick in het park." },
-          { word: "kleedje",       translation: { en: "blanket / mat" },   meaning: { nl: "een stuk stof om op te zitten" },           example: "We zaten op een kleedje in het gras." },
-          { word: "boterhammen",   translation: { en: "sandwiches" },      meaning: { nl: "brood met beleg" },                        example: "Ze had boterhammen met kaas gemaakt." },
-          { word: "verstoppertje", translation: { en: "hide and seek" },   meaning: { nl: "een spel waarbij je je verstopt" },        example: "De kinderen speelden verstoppertje." }
+          { word: "picknick",      emoji: "🧺", audio: null, image: null, translation: { en: "picnic" },          meaning: { nl: "buiten eten in de natuur" },               example: "We hadden een picknick in het park." },
+          { word: "kleedje",       emoji: "🛏️", audio: null, image: null, translation: { en: "blanket / mat" },   meaning: { nl: "een stuk stof om op te zitten" },           example: "We zaten op een kleedje in het gras." },
+          { word: "boterhammen",   emoji: "🥪", audio: null, image: null, translation: { en: "sandwiches" },      meaning: { nl: "brood met beleg" },                         example: "Ze had boterhammen met kaas gemaakt." },
+          { word: "verstoppertje", emoji: "🙈", audio: null, image: null, translation: { en: "hide and seek" },   meaning: { nl: "een spel waarbij je je verstopt" },         example: "De kinderen speelden verstoppertje." }
         ],
         paragraphs: [
           "Ik ben James. Dit is mijn familie.",
@@ -570,11 +1140,11 @@
           "We lachten allemaal. Het was een leuke dag in het park. Ik hou van mijn familie."
         ],
         questions: [
-          { question: "Wat is de naam van de jongen?",               options: ["Tom","Jack","James","Sam"],                                                                     correct: 2, explanation: { nl: "Het verhaal begint met: \"Ik ben James.\"",           en: "The story starts with: \"Ik ben James.\""          } },
-          { question: "Waar ging de familie heen afgelopen zondag?", options: ["Naar het strand","Naar een restaurant","Naar school","Naar het park"],                           correct: 3, explanation: { nl: "In het verhaal staat: \"We gingen naar het park.\"",   en: "The story says: \"We gingen naar het park.\""          } },
-          { question: "Wat nam moeder mee?",                         options: ["Koekjes, melk en fruit","Boterhammen, appels en sap","Pizza, chips en water","Taart, thee en koekjes"], correct: 1, explanation: { nl: "In het verhaal staat: \"Ze had boterhammen, appels en sap.\"", en: "The story says: \"Ze had boterhammen, appels en sap.\"" } },
-          { question: "Welk spel speelden ze na het eten?",          options: ["Voetbal","Tikkertje","Verstoppertje","Vangen"],                                                  correct: 2, explanation: { nl: "In het verhaal staat: \"speelden we verstoppertje.\"",   en: "The story says: \"speelden we verstoppertje.\""        } },
-          { question: "Waar verstopte James zich?",                  options: ["Achter een struik","Onder het kleedje","Achter zijn moeder","Achter de boom"],                    correct: 3, explanation: { nl: "In het verhaal staat: \"Ik verstopte me achter de boom.\"", en: "The story says: \"Ik verstopte me achter de boom.\""   } }
+          { question: "Wat is de naam van de jongen?",               options: ["Tom","Jack","James","Sam"],                                                                                correct: 2, explanation: { nl: "Het verhaal begint met: \"Ik ben James.\"",              en: "The story starts with: \"Ik ben James.\""          } },
+          { question: "Waar ging de familie heen afgelopen zondag?", options: ["Naar het strand","Naar een restaurant","Naar school","Naar het park"],                                      correct: 3, explanation: { nl: "In het verhaal staat: \"We gingen naar het park.\"",    en: "The story says: \"We gingen naar het park.\""      } },
+          { question: "Wat nam moeder mee?",                         options: ["Koekjes, melk en fruit","Boterhammen, appels en sap","Pizza, chips en water","Taart, thee en koekjes"],    correct: 1, explanation: { nl: "In het verhaal staat: \"Ze had boterhammen, appels en sap.\"", en: "The story says: \"Ze had boterhammen, appels en sap.\"" } },
+          { question: "Welk spel speelden ze na het eten?",          options: ["Voetbal","Tikkertje","Verstoppertje","Vangen"],                                                             correct: 2, explanation: { nl: "In het verhaal staat: \"speelden we verstoppertje.\"",  en: "The story says: \"speelden we verstoppertje.\""    } },
+          { question: "Waar verstopte James zich?",                  options: ["Achter een struik","Onder het kleedje","Achter zijn moeder","Achter de boom"],                              correct: 3, explanation: { nl: "In het verhaal staat: \"Ik verstopte me achter de boom.\"", en: "The story says: \"Ik verstopte me achter de boom.\"" } }
         ]
       }
     },
@@ -587,10 +1157,10 @@
         title:  "My Dog Max",
         teaser: "Meet Max — the funniest dog in the neighbourhood.",
         keywords: [
-          { word: "neighbourhood", translation: { nl: "buurt" },     meaning: { en: "the area near your home" },                     example: "There are many shops in my neighbourhood." },
-          { word: "bowl",          translation: { nl: "bak" },        meaning: { en: "a round container for food or water" },         example: "The dog drinks from a bowl." },
-          { word: "lead",          translation: { nl: "riem" },       meaning: { en: "a strap used to walk a dog" },                  example: "She held the lead tightly." },
-          { word: "snores",        translation: { nl: "snurkt" },     meaning: { en: "makes a loud noise while sleeping" },           example: "He snores loudly every night." }
+          { word: "neighbourhood", emoji: "🏘️", audio: null, image: null, translation: { nl: "buurt" },     meaning: { en: "the area near your home" },                     example: "There are many shops in my neighbourhood." },
+          { word: "bowl",          emoji: "🥣", audio: null, image: null, translation: { nl: "bak" },        meaning: { en: "a round container for food or water" },         example: "The dog drinks from a bowl." },
+          { word: "lead",          emoji: "🐕", audio: null, image: null, translation: { nl: "riem" },       meaning: { en: "a strap used to walk a dog" },                  example: "She held the lead tightly." },
+          { word: "snores",        emoji: "💤", audio: null, image: null, translation: { nl: "snurkt" },     meaning: { en: "makes a loud noise while sleeping" },           example: "He snores loudly every night." }
         ],
         paragraphs: [
           "My name is Lisa. I have a dog. His name is Max.",
@@ -601,21 +1171,21 @@
           "I love Max very much. He is my best friend."
         ],
         questions: [
-          { question: "What is the name of the girl?",  options: ["Emma","Lisa","Anna","Sara"],                                                             correct: 1, explanation: { en: "The story says: \"My name is Lisa.\"",                nl: "In het verhaal staat: \"My name is Lisa.\""                } },
-          { question: "What does Max look like?",       options: ["Small and white","Big and brown","Tiny and black","Tall and grey"],                       correct: 1, explanation: { en: "The story says: \"Max is big and brown.\"",             nl: "In het verhaal staat: \"Max is big and brown.\""             } },
-          { question: "What does Max do after eating?", options: ["He plays with a ball","He drinks water from his bowl","He runs in the garden","He sleeps on the sofa"], correct: 1, explanation: { en: "The story says: \"he drinks water from his bowl.\"",   nl: "In het verhaal staat: \"he drinks water from his bowl.\""   } },
-          { question: "Where do they walk past?",       options: ["The park and the river","The beach and the shops","The shops and the school","The school and the park"], correct: 2, explanation: { en: "The story says: \"past the shops and the school.\"",   nl: "In het verhaal staat: \"past the shops and the school.\""   } },
-          { question: "What colour is Max's bed?",      options: ["Blue","Green","Yellow","Red"],                                                            correct: 3, explanation: { en: "The story says: \"his big red bed.\"",                nl: "In het verhaal staat: \"his big red bed.\""                } }
+          { question: "What is the name of the girl?",  options: ["Emma","Lisa","Anna","Sara"],                                                                             correct: 1, explanation: { en: "The story says: \"My name is Lisa.\"",                nl: "In het verhaal staat: \"My name is Lisa.\""                } },
+          { question: "What does Max look like?",       options: ["Small and white","Big and brown","Tiny and black","Tall and grey"],                                       correct: 1, explanation: { en: "The story says: \"Max is big and brown.\"",             nl: "In het verhaal staat: \"Max is big and brown.\""           } },
+          { question: "What does Max do after eating?", options: ["He plays with a ball","He drinks water from his bowl","He runs in the garden","He sleeps on the sofa"],   correct: 1, explanation: { en: "The story says: \"he drinks water from his bowl.\"",   nl: "In het verhaal staat: \"he drinks water from his bowl.\""  } },
+          { question: "Where do they walk past?",       options: ["The park and the river","The beach and the shops","The shops and the school","The school and the park"],   correct: 2, explanation: { en: "The story says: \"past the shops and the school.\"",   nl: "In het verhaal staat: \"past the shops and the school.\""  } },
+          { question: "What colour is Max's bed?",      options: ["Blue","Green","Yellow","Red"],                                                                            correct: 3, explanation: { en: "The story says: \"his big red bed.\"",                nl: "In het verhaal staat: \"his big red bed.\""                } }
         ]
       },
       nl: {
         title:  "Mijn Hond Max",
         teaser: "Maak kennis met Max — de grappigste hond van de buurt.",
         keywords: [
-          { word: "buurt",   translation: { en: "neighbourhood" }, meaning: { nl: "de omgeving bij je thuis" },               example: "Er zijn veel winkels in mijn buurt." },
-          { word: "bak",     translation: { en: "bowl" },          meaning: { nl: "een ronde bak voor eten of water" },        example: "De hond drinkt uit een bak." },
-          { word: "riem",    translation: { en: "lead / leash" },  meaning: { nl: "een koord om een hond mee uit te laten" }, example: "Ze hield de riem stevig vast." },
-          { word: "snurkt",  translation: { en: "snores" },        meaning: { nl: "maakt een luid geluid tijdens het slapen" },example: "Hij snurkt elke nacht." }
+          { word: "buurt",   emoji: "🏘️", audio: null, image: null, translation: { en: "neighbourhood" }, meaning: { nl: "de omgeving bij je thuis" },                example: "Er zijn veel winkels in mijn buurt." },
+          { word: "bak",     emoji: "🥣", audio: null, image: null, translation: { en: "bowl" },          meaning: { nl: "een ronde bak voor eten of water" },         example: "De hond drinkt uit een bak." },
+          { word: "riem",    emoji: "🐕", audio: null, image: null, translation: { en: "lead / leash" },  meaning: { nl: "een koord om een hond mee uit te laten" },   example: "Ze hield de riem stevig vast." },
+          { word: "snurkt",  emoji: "💤", audio: null, image: null, translation: { en: "snores" },        meaning: { nl: "maakt een luid geluid tijdens het slapen" }, example: "Hij snurkt elke nacht." }
         ],
         paragraphs: [
           "Ik heet Lisa. Ik heb een hond. Hij heet Max.",
@@ -626,11 +1196,11 @@
           "Ik hou heel veel van Max. Hij is mijn beste vriend."
         ],
         questions: [
-          { question: "Wat is de naam van het meisje?", options: ["Emma","Lisa","Anna","Sara"],                                                                        correct: 1, explanation: { nl: "In het verhaal staat: \"Ik heet Lisa.\"",                en: "The story says: \"Ik heet Lisa.\""                } },
-          { question: "Hoe ziet Max eruit?",            options: ["Klein en wit","Groot en bruin","Piepklein en zwart","Lang en grijs"],                                correct: 1, explanation: { nl: "In het verhaal staat: \"Max is groot en bruin.\"",       en: "The story says: \"Max is groot en bruin.\""        } },
-          { question: "Wat doet Max na het eten?",      options: ["Hij speelt met een bal","Hij drinkt water uit zijn bak","Hij rent in de tuin","Hij slaapt op de bank"], correct: 1, explanation: { nl: "In het verhaal staat: \"drinkt hij water uit zijn bak.\"", en: "The story says: \"drinkt hij water uit zijn bak.\""  } },
-          { question: "Waar lopen ze langs?",           options: ["Het park en de rivier","Het strand en de winkels","De winkels en de school","De school en het park"], correct: 2, explanation: { nl: "In het verhaal staat: \"langs de winkels en de school.\"", en: "The story says: \"langs de winkels en de school.\""  } },
-          { question: "Welke kleur heeft Max zijn mand?",options: ["Blauw","Groen","Geel","Rood"],                                                                      correct: 3, explanation: { nl: "In het verhaal staat: \"zijn grote rode mand.\"",        en: "The story says: \"zijn grote rode mand.\""          } }
+          { question: "Wat is de naam van het meisje?",  options: ["Emma","Lisa","Anna","Sara"],                                                                                  correct: 1, explanation: { nl: "In het verhaal staat: \"Ik heet Lisa.\"",                  en: "The story says: \"Ik heet Lisa.\""                 } },
+          { question: "Hoe ziet Max eruit?",             options: ["Klein en wit","Groot en bruin","Piepklein en zwart","Lang en grijs"],                                          correct: 1, explanation: { nl: "In het verhaal staat: \"Max is groot en bruin.\"",        en: "The story says: \"Max is groot en bruin.\""        } },
+          { question: "Wat doet Max na het eten?",       options: ["Hij speelt met een bal","Hij drinkt water uit zijn bak","Hij rent in de tuin","Hij slaapt op de bank"],       correct: 1, explanation: { nl: "In het verhaal staat: \"drinkt hij water uit zijn bak.\"", en: "The story says: \"drinkt hij water uit zijn bak.\"" } },
+          { question: "Waar lopen ze langs?",            options: ["Het park en de rivier","Het strand en de winkels","De winkels en de school","De school en het park"],          correct: 2, explanation: { nl: "In het verhaal staat: \"langs de winkels en de school.\"", en: "The story says: \"langs de winkels en de school.\"" } },
+          { question: "Welke kleur heeft Max zijn mand?",options: ["Blauw","Groen","Geel","Rood"],                                                                                 correct: 3, explanation: { nl: "In het verhaal staat: \"zijn grote rode mand.\"",         en: "The story says: \"zijn grote rode mand.\""         } }
         ]
       }
     },
@@ -643,11 +1213,11 @@
         title:  "At the Supermarket",
         teaser: "Ali goes shopping for the first time in the Netherlands.",
         keywords: [
-          { word: "shopping",  translation: { nl: "boodschappen" }, meaning: { en: "buying food and other things in a shop" }, example: "I do my shopping on Saturday." },
-          { word: "checkout",  translation: { nl: "kassa" },        meaning: { en: "the place in a shop where you pay" },      example: "I wait at the checkout." },
-          { word: "discount",  translation: { nl: "korting" },      meaning: { en: "a lower price than normal" },             example: "There is a discount on milk." },
-          { word: "bag",       translation: { nl: "tas" },          meaning: { en: "a container you carry things in" },       example: "I put my shopping in a bag." },
-          { word: "wait",      translation: { nl: "wachten" },      meaning: { en: "to stay until something happens" },       example: "I wait at the checkout." }
+          { word: "shopping",  emoji: "🛒", audio: null, image: null, translation: { nl: "boodschappen" }, meaning: { en: "buying food and other things in a shop" }, example: "I do my shopping on Saturday." },
+          { word: "checkout",  emoji: "💳", audio: null, image: null, translation: { nl: "kassa" },        meaning: { en: "the place in a shop where you pay" },      example: "I wait at the checkout." },
+          { word: "discount",  emoji: "🏷️", audio: null, image: null, translation: { nl: "korting" },      meaning: { en: "a lower price than normal" },             example: "There is a discount on milk." },
+          { word: "bag",       emoji: "👜", audio: null, image: null, translation: { nl: "tas" },          meaning: { en: "a container you carry things in" },       example: "I put my shopping in a bag." },
+          { word: "wait",      emoji: "⏳", audio: null, image: null, translation: { nl: "wachten" },      meaning: { en: "to stay until something happens" },       example: "I wait at the checkout." }
         ],
         paragraphs: [
           "My name is Ali. I live in Amsterdam.",
@@ -658,22 +1228,22 @@
           "I pay and go home. Shopping is not difficult."
         ],
         questions: [
-          { question: "Where does Ali live?",              options: ["Rotterdam","Utrecht","Amsterdam","Den Haag"],                                                      correct: 2, explanation: { en: "The story says: \"I live in Amsterdam.\"",                        nl: "In het verhaal staat: \"I live in Amsterdam.\""                      } },
-          { question: "What does Ali buy?",                options: ["Cheese and apples","Bread and milk","Coffee and tea","Meat and vegetables"],                       correct: 1, explanation: { en: "The story says: \"I buy bread and milk.\"",                      nl: "In het verhaal staat: \"I buy bread and milk.\""                    } },
-          { question: "What has a discount?",              options: ["Bread","Milk","Coffee","Cheese"],                                                                   correct: 1, explanation: { en: "The story says: \"There is a discount on milk.\"",               nl: "In het verhaal staat: \"There is a discount on milk.\""               } },
-          { question: "What does Ali do at the checkout?", options: ["He calls","He eats","He waits","He runs"],                                                         correct: 2, explanation: { en: "The story says: \"At the checkout I have to wait.\"",             nl: "In het verhaal staat: \"At the checkout I have to wait.\""             } },
-          { question: "Is shopping difficult for Ali?",    options: ["Yes, very difficult","No, not difficult","Yes, sometimes","Maybe"],                                 correct: 1, explanation: { en: "The story says: \"Shopping is not difficult.\"",                nl: "In het verhaal staat: \"Shopping is not difficult.\""                } }
+          { question: "Where does Ali live?",              options: ["Rotterdam","Utrecht","Amsterdam","Den Haag"],                                                       correct: 2, explanation: { en: "The story says: \"I live in Amsterdam.\"",                         nl: "In het verhaal staat: \"I live in Amsterdam.\""             } },
+          { question: "What does Ali buy?",                options: ["Cheese and apples","Bread and milk","Coffee and tea","Meat and vegetables"],                        correct: 1, explanation: { en: "The story says: \"I buy bread and milk.\"",                       nl: "In het verhaal staat: \"I buy bread and milk.\""            } },
+          { question: "What has a discount?",              options: ["Bread","Milk","Coffee","Cheese"],                                                                    correct: 1, explanation: { en: "The story says: \"There is a discount on milk.\"",                nl: "In het verhaal staat: \"There is a discount on milk.\""     } },
+          { question: "What does Ali do at the checkout?", options: ["He calls","He eats","He waits","He runs"],                                                          correct: 2, explanation: { en: "The story says: \"At the checkout I have to wait.\"",              nl: "In het verhaal staat: \"At the checkout I have to wait.\""  } },
+          { question: "Is shopping difficult for Ali?",    options: ["Yes, very difficult","No, not difficult","Yes, sometimes","Maybe"],                                  correct: 1, explanation: { en: "The story says: \"Shopping is not difficult.\"",                 nl: "In het verhaal staat: \"Shopping is not difficult.\""       } }
         ]
       },
       nl: {
         title:  "Bij de Supermarkt",
         teaser: "Ali doet voor het eerst boodschappen in Nederland.",
         keywords: [
-          { word: "boodschappen", translation: { en: "groceries / shopping" }, meaning: { nl: "eten en andere dingen kopen in een winkel" }, example: "Ik doe boodschappen op zaterdag." },
-          { word: "kassa",        translation: { en: "checkout / till" },      meaning: { nl: "de plek in een winkel waar je betaalt" },      example: "Ik wacht bij de kassa." },
-          { word: "korting",      translation: { en: "discount" },             meaning: { nl: "een lagere prijs dan normaal" },              example: "Er is korting op melk." },
-          { word: "tas",          translation: { en: "bag" },                  meaning: { nl: "een zak om dingen in te dragen" },            example: "Ik doe mijn boodschappen in de tas." },
-          { word: "wachten",      translation: { en: "to wait" },              meaning: { nl: "blijven totdat iets gebeurt" },               example: "Ik moet wachten bij de kassa." }
+          { word: "boodschappen", emoji: "🛒", audio: null, image: null, translation: { en: "groceries / shopping" }, meaning: { nl: "eten en andere dingen kopen in een winkel" }, example: "Ik doe boodschappen op zaterdag." },
+          { word: "kassa",        emoji: "💳", audio: null, image: null, translation: { en: "checkout / till" },      meaning: { nl: "de plek in een winkel waar je betaalt" },      example: "Ik wacht bij de kassa." },
+          { word: "korting",      emoji: "🏷️", audio: null, image: null, translation: { en: "discount" },             meaning: { nl: "een lagere prijs dan normaal" },              example: "Er is korting op melk." },
+          { word: "tas",          emoji: "👜", audio: null, image: null, translation: { en: "bag" },                  meaning: { nl: "een zak om dingen in te dragen" },            example: "Ik doe mijn boodschappen in de tas." },
+          { word: "wachten",      emoji: "⏳", audio: null, image: null, translation: { en: "to wait" },              meaning: { nl: "blijven totdat iets gebeurt" },               example: "Ik moet wachten bij de kassa." }
         ],
         paragraphs: [
           "Mijn naam is Ali. Ik woon in Amsterdam.",
@@ -684,11 +1254,11 @@
           "Ik betaal en ga naar huis. Boodschappen doen is niet moeilijk."
         ],
         questions: [
-          { question: "Waar woont Ali?",                  options: ["Rotterdam","Utrecht","Amsterdam","Den Haag"],                                                        correct: 2, explanation: { en: "The story says: \"Ik woon in Amsterdam.\"",                   nl: "In het verhaal staat: \"Ik woon in Amsterdam.\""                   } },
-          { question: "Wat koopt Ali?",                   options: ["Kaas en appels","Brood en melk","Koffie en thee","Vlees en groente"],                               correct: 1, explanation: { en: "The story says: \"Ik koop brood en melk.\"",                 nl: "In het verhaal staat: \"Ik koop brood en melk.\""                 } },
-          { question: "Waarop is korting?",               options: ["Op brood","Op melk","Op koffie","Op kaas"],                                                          correct: 1, explanation: { en: "The story says: \"Er is korting op melk.\"",                 nl: "In het verhaal staat: \"Er is korting op melk.\""                 } },
-          { question: "Wat doet Ali bij de kassa?",       options: ["Hij belt","Hij eet","Hij wacht","Hij loopt"],                                                        correct: 2, explanation: { en: "The story says: \"Bij de kassa moet ik wachten.\"",            nl: "In het verhaal staat: \"Bij de kassa moet ik wachten.\""            } },
-          { question: "Is boodschappen doen moeilijk?",   options: ["Ja, heel moeilijk","Nee, niet moeilijk","Ja, soms","Misschien"],                                     correct: 1, explanation: { en: "The story says: \"Boodschappen doen is niet moeilijk.\"",    nl: "In het verhaal staat: \"Boodschappen doen is niet moeilijk.\""    } }
+          { question: "Waar woont Ali?",                  options: ["Rotterdam","Utrecht","Amsterdam","Den Haag"],                                                          correct: 2, explanation: { en: "The story says: \"Ik woon in Amsterdam.\"",                   nl: "In het verhaal staat: \"Ik woon in Amsterdam.\""           } },
+          { question: "Wat koopt Ali?",                   options: ["Kaas en appels","Brood en melk","Koffie en thee","Vlees en groente"],                                  correct: 1, explanation: { en: "The story says: \"Ik koop brood en melk.\"",                 nl: "In het verhaal staat: \"Ik koop brood en melk.\""          } },
+          { question: "Waarop is korting?",               options: ["Op brood","Op melk","Op koffie","Op kaas"],                                                            correct: 1, explanation: { en: "The story says: \"Er is korting op melk.\"",                 nl: "In het verhaal staat: \"Er is korting op melk.\""          } },
+          { question: "Wat doet Ali bij de kassa?",       options: ["Hij belt","Hij eet","Hij wacht","Hij loopt"],                                                          correct: 2, explanation: { en: "The story says: \"Bij de kassa moet ik wachten.\"",            nl: "In het verhaal staat: \"Bij de kassa moet ik wachten.\""   } },
+          { question: "Is boodschappen doen moeilijk?",   options: ["Ja, heel moeilijk","Nee, niet moeilijk","Ja, soms","Misschien"],                                       correct: 1, explanation: { en: "The story says: \"Boodschappen doen is niet moeilijk.\"",    nl: "In het verhaal staat: \"Boodschappen doen is niet moeilijk.\"" } }
         ]
       }
     }
@@ -704,6 +1274,18 @@
   let score           = 0;
   let answers         = [];
   let currentKeywords = [];
+  // Learn step
+  let learnIdx        = 0;
+  // Practice step
+  let practiceItems   = [];
+  let practiceIdx     = 0;
+  // Standalone flashcards
+  let fcCurrentSet    = null;
+  let fcCards         = [];
+  let fcIdx           = 0;
+  let fcQuizItems     = [];
+  let fcQIdx          = 0;
+  let fcScore         = 0;
 
   const tr  = ()  => i18n[interfaceLang];
   const sc  = (s) => s[learningLang];
@@ -726,13 +1308,24 @@
   // ══════════════════════════════════════════
   //  LANGUAGE SELECTION
   // ══════════════════════════════════════════
+  function selectPractice(lang) {
+    // Single selection sets both UI lang and learning lang
+    if (lang === "nl") { interfaceLang = "en"; learningLang = "nl"; }
+    else               { interfaceLang = "nl"; learningLang = "en"; }
+    document.documentElement.setAttribute("lang", interfaceLang);
+    updateIndicator();
+    applyTranslations();
+    buildSelectionCards();
+    showScreen("screen-select");
+  }
+
+  // Legacy — kept so old deep-links still work
   function selectUiLang(lang) {
     interfaceLang = lang;
     document.documentElement.setAttribute("lang", lang);
     applyTranslations();
     showScreen("screen-learn-lang");
   }
-
   function selectLearnLang(lang) {
     learningLang = lang;
     updateIndicator();
@@ -741,9 +1334,7 @@
     showScreen("screen-select");
   }
 
-  function goToLangScreen() {
-    showScreen("screen-ui-lang");
-  }
+  function goToHome() { showScreen("screen-home"); }
 
   function updateIndicator() {
     const flags = { en: "🇬🇧", nl: "🇳🇱" };
@@ -758,31 +1349,73 @@
   function applyTranslations() {
     const t = tr();
     const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-    set("ui-learn-title",    t.learnTitle);
-    set("ui-learn-subtitle", t.learnSubtitle);
-    set("ui-lang-label",     t.langLabel);
-    set("ui-choose-story",   t.chooseStory);
-    set("ui-back-link",      t.allStories);
-    set("ui-read-story",     t.readStory);
-    set("ui-start-btn",      t.startQuestions);
-    set("ui-keywords-label", t.keywordsLabel);
-    set("ui-reread",         t.reread);
-    set("ui-try-again",      t.tryAgain);
-    set("ui-reread-story",   t.rereadStory);
-    set("ui-choose-another", t.chooseAnother);
+    // Home
+    set("ui-home-title",      t.homeTitle);
+    set("ui-home-subtitle",   t.homeSubtitle);
+    set("ui-home-start",      t.homeStart);
+    set("ui-home-about",      t.homeAbout);
+    // Practice select
+    set("ui-ps-back",         t.psBack);
+    set("ui-ps-title",        t.psTitle);
+    set("ui-ps-nl",           t.psNL);
+    set("ui-ps-nl-sub",       t.psNLSub);
+    set("ui-ps-en",           t.psEN);
+    set("ui-ps-en-sub",       t.psENSub);
+    set("ui-ps-fc",           t.psFC);
+    set("ui-ps-fc-sub",       t.psFCSub);
+    // About
+    set("ui-about-back",         t.aboutBack);
+    set("ui-about-title",        t.aboutTitle);
+    set("ui-about-name-label",   t.aboutNameLabel);
+    set("ui-about-contact-label",t.aboutContactLabel);
+    // Story select
+    set("ui-select-back",     t.selectBack);
+    set("ui-learn-title",     t.learnTitle);
+    set("ui-learn-subtitle",  t.learnSubtitle);
+    set("ui-lang-label",      t.langLabel);
+    set("ui-choose-story",    t.chooseStory);
+    // Story reading
+    set("ui-back-link",       t.allStories);
+    set("ui-read-story",      t.readStory);
+    set("ui-start-btn",       t.startQuestions);
+    set("ui-keywords-label",  t.keywordsLabel);
+    set("ui-reread",          t.reread);
+    // Results
+    set("ui-try-again",       t.tryAgain);
+    set("ui-reread-story",    t.rereadStory);
+    set("ui-choose-another",  t.chooseAnother);
+    // Flashcard themes
+    set("ui-fc-themes-back",  t.fcThemesBack);
+    set("ui-fc-themes-title", t.fcThemesTitle);
+    // Flashcard learn
+    set("ui-fc-learn-back",   t.fcLearnBack);
+    set("ui-fc-learn-label",  t.fcLearnLabel);
+    set("ui-fc-flip-hint",    t.fcFlipHint);
+    // Flashcard quiz
+    set("ui-fc-quiz-back",     t.fcQuizBack);
+    set("ui-fc-quiz-question", t.fcQuizQuestion);
+    set("ui-fc-quiz-done",     t.fcQuizDone);
+    set("ui-fc-quiz-retry",    t.fcQuizRetry);
+    set("ui-fc-quiz-themes",   t.fcQuizThemes);
   }
 
   // ══════════════════════════════════════════
   //  SCREENS
   // ══════════════════════════════════════════
+  const HIDE_INDICATOR_ON = new Set([
+    "screen-home", "screen-ui-lang", "screen-learn-lang",
+    "screen-practice-select", "screen-about",
+    "screen-flashcard-themes", "screen-flashcard-learn", "screen-flashcard-quiz"
+  ]);
+
   function showScreen(id) {
     document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
     document.getElementById(id).classList.add("active");
     window.scrollTo({ top: 0, behavior: "smooth" });
     closeWordPopup();
-    const langScreens = ["screen-ui-lang", "screen-learn-lang"];
-    document.getElementById("lang-indicator").classList.toggle("hidden", langScreens.includes(id));
+    document.getElementById("lang-indicator").classList.toggle("hidden", HIDE_INDICATOR_ON.has(id));
     if (id === "screen-select") buildSelectionCards();
+    if (id === "screen-flashcard-themes") buildFlashcardThemes();
   }
 
   // ══════════════════════════════════════════
@@ -823,42 +1456,144 @@
     currentStory = stories[idx];
     currentStory._idx = idx;
     updateStoryScreen();
-    buildWordIntroScreen();
+    learnIdx = 0;
+    showLearnCard(0);
     showScreen("screen-word-intro");
   }
 
-  function buildWordIntroScreen() {
-    const t   = tr();
-    const c   = sc(currentStory);
-    const kws = c.keywords || [];
+  // ══════════════════════════════════════════
+  //  LEARN STEP
+  // ══════════════════════════════════════════
+  function showLearnCard(idx) {
+    const t     = tr();
+    const c     = sc(currentStory);
+    const kws   = c.keywords || [];
+    const kw    = kws[idx];
+    const total = kws.length;
 
-    document.getElementById("ui-word-intro-back").textContent      = t.allStories;
-    document.getElementById("ui-word-intro-eyebrow").textContent   = t.wordIntroEyebrow;
-    document.getElementById("word-intro-story-title").textContent  = c.title;
-    document.getElementById("ui-word-intro-instruction").textContent = t.wordIntroInstruction;
-    document.getElementById("ui-word-intro-btn").textContent       = t.startReading;
+    document.getElementById("ui-learn-back").textContent       = t.allStories;
+    document.getElementById("ui-learn-step-label").textContent = t.learnStepLabel;
+    document.getElementById("learn-progress").textContent      = t.cardOf(idx + 1, total);
 
-    const wrap = document.getElementById("word-cards-wrap");
+    // Visual: real image if available, otherwise emoji
+    const emojiEl = document.getElementById("learn-emoji");
+    if (kw.image) {
+      emojiEl.innerHTML = `<img src="${escHTML(kw.image)}" alt="${escHTML(kw.word)}" class="flash-img">`;
+    } else {
+      emojiEl.textContent = kw.emoji || "📖";
+    }
+
+    document.getElementById("learn-word").textContent          = kw.word;
+    const meaning = (interfaceLang !== learningLang)
+      ? (kw.translation[interfaceLang] || "")
+      : (kw.meaning[interfaceLang]     || "");
+    document.getElementById("learn-trans").textContent         = meaning;
+    document.getElementById("learn-example").textContent       = kw.example || "";
+
+    const nextBtn = document.getElementById("ui-learn-next-btn");
+    nextBtn.textContent = (idx === total - 1) ? t.startPractice : t.nextWord;
+  }
+
+  function nextLearnCard() {
+    const c     = sc(currentStory);
+    const total = (c.keywords || []).length;
+    learnIdx++;
+    if (learnIdx < total) {
+      showLearnCard(learnIdx);
+    } else {
+      buildPracticeScreen();
+      showScreen("screen-practice");
+    }
+  }
+
+  // ══════════════════════════════════════════
+  //  PRACTICE STEP
+  // ══════════════════════════════════════════
+  function buildPracticeScreen() {
+    const c     = sc(currentStory);
+    const kws   = c.keywords || [];
+    practiceItems = [...kws].sort(() => Math.random() - 0.5);
+    practiceIdx   = 0;
+    showPracticeItem(0);
+  }
+
+  function showPracticeItem(idx) {
+    const t     = tr();
+    const kw    = practiceItems[idx];
+    const total = practiceItems.length;
+    const c     = sc(currentStory);
+    const kws   = c.keywords || [];
+
+    document.getElementById("ui-practice-back").textContent       = t.allStories;
+    document.getElementById("ui-practice-step-label").textContent = t.practiceStepLabel;
+    document.getElementById("practice-progress").textContent      = t.cardOf(idx + 1, total);
+
+    const emojiEl = document.getElementById("practice-emoji");
+    if (kw.image) {
+      emojiEl.innerHTML = `<img src="${escHTML(kw.image)}" alt="${escHTML(kw.word)}" class="flash-img" style="width:100px;height:100px">`;
+    } else {
+      emojiEl.textContent = kw.emoji || "❓";
+    }
+    document.getElementById("ui-practice-question").textContent = t.practiceQuestion;
+
+    const distractors = kws
+      .filter(k => k.word !== kw.word)
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 2);
+    const options = [kw, ...distractors].sort(() => Math.random() - 0.5);
+
+    const wrap = document.getElementById("practice-options-wrap");
     wrap.innerHTML = "";
-    kws.forEach(kw => {
-      const meaning = (interfaceLang !== learningLang)
-        ? (kw.translation[interfaceLang] || "")
-        : (kw.meaning[interfaceLang]     || "");
-      const div = document.createElement("div");
-      div.className = "word-card";
-      div.innerHTML =
-        `<div class="word-card-nl">${escHTML(kw.word)}</div>` +
-        `<div class="word-card-en">${escHTML(meaning)}</div>` +
-        (kw.example ? `<div class="word-card-example">${escHTML(kw.example)}</div>` : "");
-      wrap.appendChild(div);
+    options.forEach(opt => {
+      const btn = document.createElement("button");
+      btn.className   = "practice-option";
+      btn.textContent = opt.word;
+      btn.onclick     = () => selectPracticeAnswer(btn, opt.word === kw.word);
+      wrap.appendChild(btn);
     });
+
+    const fb = document.getElementById("practice-feedback-box");
+    fb.className = "feedback-box";
+    document.getElementById("practice-verdict").textContent       = "";
+    document.getElementById("ui-practice-next-btn").style.display = "none";
+  }
+
+  function selectPracticeAnswer(btn, isRight) {
+    const t = tr();
+    document.querySelectorAll(".practice-option").forEach(b => {
+      b.disabled = true;
+      if (b === btn) b.classList.add(isRight ? "correct" : "wrong");
+    });
+    if (!isRight) {
+      const kw = practiceItems[practiceIdx];
+      document.querySelectorAll(".practice-option").forEach(b => {
+        if (b.textContent === kw.word) b.classList.add("correct");
+      });
+    }
+    const fb = document.getElementById("practice-feedback-box");
+    fb.className = "feedback-box " + (isRight ? "correct" : "wrong");
+    document.getElementById("practice-verdict").textContent =
+      isRight ? t.practiceCorrect : t.practiceWrong;
+
+    const nextBtn = document.getElementById("ui-practice-next-btn");
+    nextBtn.style.display = "block";
+    nextBtn.textContent   = (practiceIdx === practiceItems.length - 1) ? t.startReading : t.nextWord;
+  }
+
+  function nextPracticeItem() {
+    practiceIdx++;
+    if (practiceIdx < practiceItems.length) {
+      showPracticeItem(practiceIdx);
+    } else {
+      showScreen("screen-story");
+    }
   }
 
   // ══════════════════════════════════════════
   //  KEYWORD MARKUP
   // ══════════════════════════════════════════
   function escHTML(s) {
-    return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
   }
   function escReg(s) { return s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"); }
 
@@ -880,7 +1615,7 @@
     currentKeywords = c.keywords || [];
     document.getElementById("story-title").textContent = c.title;
 
-    const bar = document.getElementById("keywords-bar");
+    const bar   = document.getElementById("keywords-bar");
     const chips = document.getElementById("keywords-chips-wrap");
     if (currentKeywords.length) {
       bar.classList.remove("hidden");
@@ -891,7 +1626,7 @@
       bar.classList.add("hidden");
     }
 
-    document.getElementById("story-body").innerHTML = c.paragraphs.map(p => `<p>${markupText(p)}</p>`).join("");
+    document.getElementById("story-body").innerHTML      = c.paragraphs.map(p => `<p>${markupText(p)}</p>`).join("");
     document.getElementById("story-mini-text").innerHTML = c.paragraphs.map(p => `<p>${escHTML(p)}</p>`).join("");
   }
 
@@ -900,19 +1635,19 @@
   // ══════════════════════════════════════════
   function showWordPopup(event, idx) {
     event.stopPropagation();
-    const kw     = currentKeywords[idx];
-    const t      = tr();
-    const popup  = document.getElementById("word-popup");
-    const card   = document.querySelector(".card");
+    const kw    = currentKeywords[idx];
+    const t     = tr();
+    const popup = document.getElementById("word-popup");
+    const card  = document.querySelector(".card");
 
     const translation = (interfaceLang !== learningLang)
       ? (kw.translation[interfaceLang] || "")
       : (kw.meaning[interfaceLang] || "");
 
-    document.getElementById("popup-word").textContent        = kw.word;
-    document.getElementById("popup-translation").textContent = translation;
+    document.getElementById("popup-word").textContent          = kw.word;
+    document.getElementById("popup-translation").textContent   = translation;
     document.getElementById("popup-example-label").textContent = t.exampleLabel;
-    document.getElementById("popup-example").textContent     = kw.example || "";
+    document.getElementById("popup-example").textContent       = kw.example || "";
 
     popup.classList.remove("hidden");
     const br = event.target.getBoundingClientRect();
@@ -935,6 +1670,11 @@
     if (!popup.classList.contains("hidden") && !popup.contains(e.target)) closeWordPopup();
   });
 
+  // Keyboard support for flip card
+  document.getElementById("fc-flip-card").addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); flipCard(); }
+  });
+
   // ══════════════════════════════════════════
   //  QUESTIONS
   // ══════════════════════════════════════════
@@ -950,9 +1690,9 @@
     const q     = c.questions[currentQ];
     const total = c.questions.length;
 
-    document.getElementById("progress-fill").style.width    = (currentQ / total * 100) + "%";
-    document.getElementById("progress-label").textContent   = t.questionOf(currentQ + 1, total);
-    document.getElementById("question-text").textContent    = q.question;
+    document.getElementById("progress-fill").style.width  = (currentQ / total * 100) + "%";
+    document.getElementById("progress-label").textContent = t.questionOf(currentQ + 1, total);
+    document.getElementById("question-text").textContent  = q.question;
 
     const wrap = document.getElementById("options-wrap");
     wrap.innerHTML = "";
@@ -965,10 +1705,10 @@
       wrap.appendChild(btn);
     });
 
-    document.getElementById("feedback-box").className = "feedback-box";
-    document.getElementById("feedback-verdict").textContent     = "";
-    document.getElementById("feedback-explanation").textContent = "";
-    document.getElementById("next-btn").style.display = "none";
+    document.getElementById("feedback-box").className             = "feedback-box";
+    document.getElementById("feedback-verdict").textContent       = "";
+    document.getElementById("feedback-explanation").textContent   = "";
+    document.getElementById("next-btn").style.display             = "none";
     document.getElementById("story-mini-wrap").removeAttribute("open");
   }
 
@@ -1032,17 +1772,228 @@
     const list = document.getElementById("results-list");
     list.innerHTML = "";
     answers.forEach((ans, i) => {
-      const q       = c.questions[i];
-      const li      = document.createElement("li");
-      li.className  = ans.correct ? "ok" : "fail";
-      const yours   = escHTML(q.options[ans.chosen]);
-      const right   = escHTML(q.options[ans.right]);
-      li.innerHTML  = `<span class="q-label">${ans.correct ? "✓" : "✗"} ${escHTML(q.question)}</span>
+      const q      = c.questions[i];
+      const li     = document.createElement("li");
+      li.className = ans.correct ? "ok" : "fail";
+      const yours  = escHTML(q.options[ans.chosen]);
+      const right  = escHTML(q.options[ans.right]);
+      li.innerHTML = `<span class="q-label">${ans.correct ? "✓" : "✗"} ${escHTML(q.question)}</span>
         ${ans.correct
           ? `${t.yourAnswer} ${yours}`
           : `${t.yourAnswer} ${yours} — ${t.correctAnswer} ${right}`}`;
       list.appendChild(li);
     });
+
+    renderWordReview();
+  }
+
+  function renderWordReview() {
+    const t   = tr();
+    const c   = sc(currentStory);
+    const kws = c.keywords || [];
+
+    document.getElementById("ui-review-label").textContent = t.wordsLearned;
+
+    const wrap = document.getElementById("review-words-wrap");
+    wrap.innerHTML = "";
+    kws.forEach(kw => {
+      const meaning = (interfaceLang !== learningLang)
+        ? (kw.translation[interfaceLang] || "")
+        : (kw.meaning[interfaceLang]     || "");
+      const row = document.createElement("div");
+      row.className = "review-word-row";
+      row.innerHTML =
+        `<span class="review-emoji">${kw.emoji || "📖"}</span>` +
+        `<div class="review-word-info">` +
+          `<div class="review-word-nl">${escHTML(kw.word)}</div>` +
+          `<div class="review-word-en">${escHTML(meaning)}</div>` +
+        `</div>`;
+      wrap.appendChild(row);
+    });
+  }
+
+  // ══════════════════════════════════════════
+  //  STANDALONE FLASHCARD MODE
+  // ══════════════════════════════════════════
+  function buildFlashcardThemes() {
+    const list = document.getElementById("fc-theme-list");
+    list.innerHTML = "";
+    flashcardSets.forEach(set => {
+      const btn = document.createElement("button");
+      btn.className = "fc-theme-card";
+      btn.setAttribute("aria-label", set.title[interfaceLang] || set.title.en);
+      btn.onclick = () => openFlashcardSet(set.id);
+      btn.innerHTML = `
+        <div class="fc-theme-icon">${set.emoji}</div>
+        <div class="fc-theme-info">
+          <h2>${escHTML(set.title[interfaceLang] || set.title.en)}</h2>
+          <p>${escHTML(set.subtitle[interfaceLang] || set.subtitle.en)}</p>
+        </div>`;
+      list.appendChild(btn);
+    });
+  }
+
+  function openFlashcardSet(id) {
+    fcCurrentSet = flashcardSets.find(s => s.id === id);
+    if (!fcCurrentSet) return;
+    fcCards = [...fcCurrentSet.cards];
+    fcIdx   = 0;
+    showFlashcardCard(0);
+    showScreen("screen-flashcard-learn");
+  }
+
+  function showFlashcardCard(idx) {
+    const t     = tr();
+    const card  = fcCards[idx];
+    const total = fcCards.length;
+
+    document.getElementById("ui-fc-learn-label").textContent  = t.fcLearnLabel;
+    document.getElementById("fc-learn-progress").textContent  = t.fcCardOf(idx + 1, total);
+    document.getElementById("ui-fc-flip-hint").textContent    = t.fcFlipHint;
+
+    // Visual: image if available, otherwise emoji
+    const frontEl = document.getElementById("fc-front-visual");
+    if (card.image) {
+      frontEl.innerHTML = `<img src="${escHTML(card.image)}" alt="${escHTML(card.nl)}" class="flash-img">`;
+    } else {
+      frontEl.textContent = card.emoji || "❓";
+    }
+    frontEl.className = card.image ? "" : "fc-front-emoji";
+
+    document.getElementById("fc-back-word").textContent  = card.nl;
+    document.getElementById("fc-back-trans").textContent = card.en;
+
+    // Reset flip state
+    document.getElementById("fc-flip-card").classList.remove("flipped");
+    document.getElementById("ui-fc-next-btn").style.display = "none";
+    document.getElementById("ui-fc-next-btn").textContent =
+      (idx === total - 1) ? tr().fcQuizLabel + " →" : t.fcNextCard;
+  }
+
+  function flipCard() {
+    const card = document.getElementById("fc-flip-card");
+    if (card.classList.contains("flipped")) return;
+    card.classList.add("flipped");
+    const nextBtn = document.getElementById("ui-fc-next-btn");
+    nextBtn.style.display = "block";
+    const t = tr();
+    nextBtn.textContent = (fcIdx === fcCards.length - 1)
+      ? t.fcQuizLabel + " →"
+      : t.fcNextCard;
+  }
+
+  function nextFlashcard() {
+    fcIdx++;
+    if (fcIdx < fcCards.length) {
+      showFlashcardCard(fcIdx);
+    } else {
+      buildFlashcardQuiz();
+    }
+  }
+
+  function buildFlashcardQuiz() {
+    fcQuizItems = [...fcCards].sort(() => Math.random() - 0.5);
+    fcQIdx  = 0;
+    fcScore = 0;
+    // Reset result area, show question area
+    document.getElementById("fc-quiz-question-area").style.display = "block";
+    document.getElementById("fc-quiz-result").classList.remove("visible");
+    showFlashcardQuestion(0);
+    showScreen("screen-flashcard-quiz");
+  }
+
+  function showFlashcardQuestion(idx) {
+    const t     = tr();
+    const card  = fcQuizItems[idx];
+    const total = fcQuizItems.length;
+
+    document.getElementById("ui-fc-quiz-label").textContent    = t.fcQuizLabel;
+    document.getElementById("fc-quiz-progress").textContent    = t.fcCardOf(idx + 1, total);
+    document.getElementById("ui-fc-quiz-question").textContent = t.fcQuizQuestion;
+
+    // Visual
+    const visualEl = document.getElementById("fc-quiz-visual");
+    if (card.image) {
+      visualEl.innerHTML = `<img src="${escHTML(card.image)}" alt="" class="flash-img" style="width:120px;height:120px;margin:0 auto;display:block">`;
+    } else {
+      visualEl.textContent = card.emoji || "❓";
+    }
+
+    // 3 options: correct + 2 distractors from same set
+    const distractors = fcCards
+      .filter(c => c.nl !== card.nl)
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 2);
+    const options = [card, ...distractors].sort(() => Math.random() - 0.5);
+
+    const wrap = document.getElementById("fc-quiz-options");
+    wrap.innerHTML = "";
+    options.forEach(opt => {
+      const btn = document.createElement("button");
+      btn.className   = "fc-quiz-option";
+      btn.textContent = opt.nl;
+      btn.onclick     = () => selectFlashcardAnswer(btn, opt.nl === card.nl, card.nl);
+      wrap.appendChild(btn);
+    });
+
+    // Reset feedback
+    const fb = document.getElementById("fc-quiz-feedback");
+    fb.className = "feedback-box";
+    document.getElementById("fc-quiz-verdict").textContent  = "";
+    document.getElementById("ui-fc-quiz-next").style.display = "none";
+  }
+
+  function selectFlashcardAnswer(btn, isRight, correctWord) {
+    const t = tr();
+    if (isRight) fcScore++;
+
+    document.querySelectorAll(".fc-quiz-option").forEach(b => {
+      b.disabled = true;
+      if (b === btn) b.classList.add(isRight ? "correct" : "wrong");
+    });
+    if (!isRight) {
+      document.querySelectorAll(".fc-quiz-option").forEach(b => {
+        if (b.textContent === correctWord) b.classList.add("correct");
+      });
+    }
+
+    const fb = document.getElementById("fc-quiz-feedback");
+    fb.className = "feedback-box " + (isRight ? "correct" : "wrong");
+    document.getElementById("fc-quiz-verdict").textContent = isRight ? t.practiceCorrect : t.practiceWrong;
+
+    const nextBtn = document.getElementById("ui-fc-quiz-next");
+    nextBtn.style.display = "block";
+    nextBtn.textContent   = t.fcQuizNext;
+  }
+
+  function nextFlashcardQuizItem() {
+    fcQIdx++;
+    if (fcQIdx < fcQuizItems.length) {
+      showFlashcardQuestion(fcQIdx);
+    } else {
+      showFlashcardResult();
+    }
+  }
+
+  function showFlashcardResult() {
+    const t     = tr();
+    const total = fcQuizItems.length;
+    const pct   = fcScore / total;
+    const icon  = pct === 1 ? "🏆" : pct >= 0.6 ? "🌟" : "📖";
+
+    document.getElementById("fc-quiz-question-area").style.display = "none";
+    const result = document.getElementById("fc-quiz-result");
+    result.classList.add("visible");
+
+    document.getElementById("fc-quiz-result-icon").textContent   = icon;
+    document.getElementById("ui-fc-quiz-done").textContent       = t.fcQuizDone;
+    document.getElementById("fc-quiz-result-score").innerHTML    = t.fcQuizScore(fcScore, total);
+    document.getElementById("ui-fc-quiz-retry").textContent      = t.fcQuizRetry;
+    document.getElementById("ui-fc-quiz-themes").textContent     = t.fcQuizThemes;
+  }
+
+  function retryFlashcardQuiz() {
+    buildFlashcardQuiz();
   }
 </script>
 </body>
