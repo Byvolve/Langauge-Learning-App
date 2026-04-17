@@ -97,6 +97,24 @@
     .screen { display: none; }
     .screen.active { display: block; }
 
+    /* ════ WELCOME SCREEN ════ */
+    #screen-welcome {
+      cursor: pointer;
+    }
+    .welcome-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 64px 32px;
+      gap: 18px;
+      min-height: 340px;
+    }
+    .welcome-icon { font-size: 64px; line-height: 1; }
+    .welcome-title { font-size: 28px; font-weight: 800; color: var(--text); }
+    .welcome-hint { font-size: 14px; color: var(--muted); letter-spacing: 0.3px; margin-top: 4px; }
+
     /* ════ CARD TOPBAR (lang indicator + theme toggle) ════ */
     .card-topbar {
       position: absolute;
@@ -753,8 +771,21 @@
     <div class="popup-example" id="popup-example"></div>
   </div>
 
+  <!-- ════ SCREEN: WELCOME ════ -->
+  <div id="screen-welcome" class="screen active"
+       role="button" tabindex="0"
+       aria-label="Tap to begin"
+       onclick="showScreen('screen-home')"
+       onkeydown="if(event.key==='Enter'||event.key===' ')showScreen('screen-home')">
+    <div class="welcome-wrapper">
+      <div class="welcome-icon">📖</div>
+      <div class="welcome-title">Language Learning</div>
+      <div class="welcome-hint">Tap anywhere to begin</div>
+    </div>
+  </div>
+
   <!-- ════ SCREEN: HOME ════ -->
-  <div id="screen-home" class="screen active">
+  <div id="screen-home" class="screen">
     <div class="home-wrapper">
       <div class="home-app-icon">📖</div>
       <h1 class="home-title" id="ui-home-title">Language Learning</h1>
@@ -2420,7 +2451,7 @@
   //  SCREENS
   // ══════════════════════════════════════════
   const HIDE_INDICATOR_ON = new Set([
-    "screen-home", "screen-ui-lang", "screen-learn-lang",
+    "screen-welcome", "screen-home", "screen-ui-lang", "screen-learn-lang",
     "screen-practice-select", "screen-about",
     "screen-flashcard-themes", "screen-flashcard-learn", "screen-flashcard-quiz",
     "screen-beginner-themes", "screen-beginner-lesson"
